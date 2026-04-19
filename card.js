@@ -38,7 +38,7 @@ function buildPropertyCardHTML(p){
         : '';
 
     // Exact Location HTML
-    let nearestPlacesHTML = '';
+    let exactLocationHTML = '';
     if(p.nearestPlaces && p.nearestPlaces.length > 0){
         const categoryIcons = {
             'school': 'fa-school',
@@ -54,7 +54,7 @@ function buildPropertyCardHTML(p){
             'gym': 'fa-dumbbell',
             'bank': 'fa-landmark'
         };
-        nearestPlacesHTML = `
+        exactLocationHTML = `
             <div class="exact-location-section">
                 <div class="exact-location-title"><i class="fas fa-location-dot"></i> Exact Location</div>
                 <div class="exact-location-list">
@@ -117,8 +117,8 @@ function buildPropertyCardHTML(p){
             ${subAreaHTML}
         </div>
 
-        <!-- Exact Location — right after location -->
-        ${nearestPlacesHTML}
+        <!-- Exact Location -->
+        ${exactLocationHTML}
 
         <!-- Property Features: size · beds · baths · type -->
         <div class="property-features">
@@ -189,7 +189,4 @@ function buildPropertyCardHTML(p){
 
         </div>
     </div>`;
-
-
-
 }
