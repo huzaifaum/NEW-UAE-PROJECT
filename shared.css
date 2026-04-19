@@ -893,3 +893,43 @@ body{background-color:var(--bg-primary);color:var(--text-primary);overflow-x:hid
     color: var(--primary);
     flex-shrink: 0;
 }
+/* Exact Location Styles */
+.exact-location {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-top: 6px;
+    border-left: 3px solid #ea4335;
+}
+
+.google-maps-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: #1a73e8;
+    font-size: 13px;
+    font-weight: 500;
+    margin-left: 10px;
+    transition: all 0.2s ease;
+    border: 1px solid #dadce0;
+}
+
+.google-maps-link:hover {
+    background: #e8f0fe;
+    border-color: #1a73e8;
+    transform: translateY(-1px);
+}
+
+.google-maps-link i {
+    font-size: 14px;
+}
+
+.location-address {
+    font-size: 13px;
+    color: #5f6368;
+    margin-right: 8px;
+}
