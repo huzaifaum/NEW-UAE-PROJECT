@@ -450,8 +450,8 @@ body{background-color:var(--bg-primary);color:var(--text-primary);overflow-x:hid
 }
 /* Add these styles to your shared.css file */
 
-/* ===== EXACT LOCATION SECTION ===== */
-.exact-location-section {
+/* ===== NEAREST PLACES SECTION ===== */
+.nearest-places-section {
     margin: 12px 0;
     padding: 10px;
     background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f5 100%);
@@ -459,7 +459,7 @@ body{background-color:var(--bg-primary);color:var(--text-primary);overflow-x:hid
     border-left: 4px solid var(--primary);
 }
 
-.exact-location-title {
+.nearest-places-title {
     font-size: 12px;
     font-weight: 700;
     color: var(--primary);
@@ -469,13 +469,13 @@ body{background-color:var(--bg-primary);color:var(--text-primary);overflow-x:hid
     gap: 6px;
 }
 
-.exact-location-list {
+.nearest-places-list {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
 }
 
-.exact-location-chip {
+.nearest-place-chip {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -491,29 +491,29 @@ body{background-color:var(--bg-primary);color:var(--text-primary);overflow-x:hid
     box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
-.exact-location-chip:hover {
+.nearest-place-chip:hover {
     background: var(--primary);
     color: #000;
     border-color: var(--primary);
     transform: translateY(-1px);
 }
 
-.exact-location-chip i {
+.nearest-place-chip i {
     font-size: 11px;
     color: var(--primary);
 }
 
-.exact-location-chip:hover i {
+.nearest-place-chip:hover i {
     color: #000;
 }
 
-.exact-location-chip small {
+.nearest-place-chip small {
     font-size: 9px;
     color: #888;
     margin-left: 2px;
 }
 
-.exact-location-chip:hover small {
+.nearest-place-chip:hover small {
     color: #333;
 }
 
@@ -660,8 +660,8 @@ body{background-color:var(--bg-primary);color:var(--text-primary);overflow-x:hid
     white-space: nowrap;
 }
 
-/* ===== EXACT LOCATION UPLOAD FORM STYLES ===== */
-#exactLocationsSection {
+/* ===== NEAREST PLACES UPLOAD FORM STYLES ===== */
+#nearestPlacesSection {
     grid-column: span 2;
     background: rgba(201,162,39,0.05);
     border: 2px solid var(--primary);
@@ -671,12 +671,12 @@ body{background-color:var(--bg-primary);color:var(--text-primary);overflow-x:hid
 }
 
 @media (max-width: 600px) {
-    #exactLocationsSection {
+    #nearestPlacesSection {
         grid-column: span 1;
     }
 }
 
-#exactLocationsSection h3 {
+#nearestPlacesSection h3 {
     color: var(--primary);
     font-size: 15px;
     margin-bottom: 12px;
@@ -685,7 +685,7 @@ body{background-color:var(--bg-primary);color:var(--text-primary);overflow-x:hid
     gap: 8px;
 }
 
-.exact-location-item {
+.nearest-place-item {
     background: #0d1829;
     border-radius: 10px;
     padding: 10px;
@@ -758,13 +758,13 @@ body{background-color:var(--bg-primary);color:var(--text-primary);overflow-x:hid
     text-align: center;
 }
 
-.add-exact-location-form {
+.add-nearest-place-form {
     margin-top: 16px;
     padding-top: 12px;
     border-top: 1px solid var(--border);
 }
 
-.add-exact-location-form .form-row {
+.add-nearest-place-form .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
@@ -772,13 +772,13 @@ body{background-color:var(--bg-primary);color:var(--text-primary);overflow-x:hid
 }
 
 @media (max-width: 600px) {
-    .add-exact-location-form .form-row {
+    .add-nearest-place-form .form-row {
         grid-template-columns: 1fr;
     }
 }
 
-.add-exact-location-form input,
-.add-exact-location-form select {
+.add-nearest-place-form input,
+.add-nearest-place-form select {
     width: 100%;
     padding: 8px 12px;
     background: #fff;

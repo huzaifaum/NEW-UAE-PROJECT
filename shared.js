@@ -41,8 +41,8 @@ const subAreaMapsLinks = {
 let customAreas = JSON.parse(localStorage.getItem('customAreas')) || JSON.parse(JSON.stringify(defaultCityAreas));
 let customSubAreas = JSON.parse(localStorage.getItem('customSubAreas')) || JSON.parse(JSON.stringify(defaultSubAreas));
 let customSubAreaLinks = JSON.parse(localStorage.getItem('customSubAreaLinks')) || {};
-// Exact Locations with categories
-let customExactLocations = JSON.parse(localStorage.getItem('customExactLocations')) || {};
+// Nearest points with categories
+let customNearestPoints = JSON.parse(localStorage.getItem('customNearestPoints')) || {};
 
 const propertyTypes = [
     'Studio Apartment','Bed Space','Partition','Room','Hall',
@@ -62,7 +62,7 @@ if(localStorage.getItem('dataVersion') !== DATA_VERSION){
 }
 let properties = JSON.parse(localStorage.getItem('properties')) || [];
 
-// Seed sample data with exact locations
+// Seed sample data with nearest places
 if(properties.length===0){
     const today=new Date();
     const in1day=new Date(today); in1day.setDate(in1day.getDate()+1);
@@ -72,9 +72,9 @@ if(properties.length===0){
     const day1=new Date(today); day1.setDate(day1.getDate()-1);
     const day2=new Date(today); day2.setDate(day2.getDate()-2);
     properties=[
-        {id:1,profileCode:'561',title:'Skyline Residencies',city:'Dubai',area:'Dubai Marina',subArea:'Marina Walk',type:'Studio Apartment',price:280000,propertyStatus:'rent',rentalType:'monthly',bedrooms:0,bathrooms:1,areaSize:500,description:'Beautiful studio in prime location with stunning marina views.',amenities:{balcony:'yes',attachedWashroom:'yes',window:'yes',commonWashroom:'no',fullClosed:'yes',genderPreference:'male',kidsAllowed:'no',bachelorsAllowed:'yes'},imageLabels:{main:'Balcony',second:'Master Bedroom',third:'Kitchen',fourth:'Living Room',fifth:'Bathroom',sixth:'View'},images:['https://images.unsplash.com/photo-1501183638710-841dd1904471?w=800','https://images.unsplash.com/photo-1554995207-c18c203602cb?w=800','https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800','https://images.unsplash.com/photo-1560448075-bb4caa6c0c39?w=800','https://images.unsplash.com/photo-1560184897-ae75f418493e?w=800','https://images.unsplash.com/photo-1560185009-5bf9f2849488?w=800'],contact:{whatsapp:'+971 50 123 4567',phone:'+971 4 987 6543'},locationLink:'https://maps.google.com/?q=Dubai+Marina,Dubai,UAE',videoUrl:'https://www.youtube.com/embed/dQw4w9WgXcQ',userId:'user',status:'approved',createdAt:day2.toISOString(),availableFrom:in1day.toISOString(),availableIn:'1 day',timerUpdatedAt:day2.toISOString(),exactLocations:[{name:'Marina Mall',category:'Market',mapLink:'https://maps.google.com/?q=Marina+Mall,Dubai'},{name:'Mediclinic',category:'Hospital',mapLink:'https://maps.google.com/?q=Mediclinic+Dubai+Marina'}]},
-        {id:2,profileCode:'562',title:'Luxury Villa with Pool',city:'Dubai',area:'Palm Jumeirah',subArea:'Shoreline',type:'5 BHK Villa',price:8500000,propertyStatus:'sale',rentalType:'sale',bedrooms:5,bathrooms:7,areaSize:5000,description:'Luxury villa with private pool and beach access.',amenities:{balcony:'yes',attachedWashroom:'yes',window:'yes',commonWashroom:'no',fullClosed:'yes',genderPreference:'female',kidsAllowed:'yes',bachelorsAllowed:'no'},imageLabels:{main:'Balcony',second:'Master Bedroom',third:'Kitchen',fourth:'Pool',fifth:'Garden',sixth:'View'},images:['https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800','https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800'],contact:{whatsapp:'+971 50 987 6543',phone:'+971 4 123 4567'},locationLink:'https://maps.google.com/?q=Palm+Jumeirah,Dubai,UAE',videoUrl:'https://www.youtube.com/embed/3AtDnEC4zak',userId:'user',status:'approved',createdAt:day1.toISOString(),availableFrom:in7days.toISOString(),availableIn:'7 days',timerUpdatedAt:day1.toISOString(),exactLocations:[{name:'Nakheel Mall',category:'Market',mapLink:'https://maps.google.com/?q=Nakheel+Mall'},{name:'Palm Mosque',category:'Mosque',mapLink:'https://maps.google.com/?q=Palm+Mosque'}]},
-        {id:3,profileCode:'563',title:'Modern 2BHK Near Mall',city:'Abu Dhabi',area:'Al Reem Island',subArea:'',type:'2 BHK',price:95000,propertyStatus:'rent',rentalType:'yearly',bedrooms:2,bathrooms:2,areaSize:1200,description:'Modern 2 BHK apartment with great amenities.',amenities:{balcony:'yes',attachedWashroom:'yes',window:'yes',commonWashroom:'no',fullClosed:'no',genderPreference:'male',kidsAllowed:'yes',bachelorsAllowed:'yes'},imageLabels:{main:'Living Room',second:'Bedroom 1',third:'Kitchen',fourth:'Bedroom 2',fifth:'Bathroom',sixth:'View'},images:['https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800','https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800','https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800','https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800','https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800','https://images.unsplash.com/photo-1560185007-c5ca9d2c014d?w=800'],contact:{whatsapp:'+971 55 456 7890',phone:'+971 2 345 6789'},locationLink:'https://maps.google.com/?q=Al+Reem+Island,Abu+Dhabi,UAE',videoUrl:'https://www.youtube.com/embed/ScMzIvxBSi4',userId:'user',status:'approved',createdAt:day0.toISOString(),availableFrom:in3days.toISOString(),availableIn:'3 days',timerUpdatedAt:day0.toISOString(),exactLocations:[]}
+        {id:1,profileCode:'561',title:'Skyline Residencies',city:'Dubai',area:'Dubai Marina',subArea:'Marina Walk',type:'Studio Apartment',price:280000,propertyStatus:'rent',rentalType:'monthly',bedrooms:0,bathrooms:1,areaSize:500,description:'Beautiful studio in prime location with stunning marina views.',amenities:{balcony:'yes',attachedWashroom:'yes',window:'yes',commonWashroom:'no',fullClosed:'yes',genderPreference:'male',kidsAllowed:'no',bachelorsAllowed:'yes'},imageLabels:{main:'Balcony',second:'Master Bedroom',third:'Kitchen',fourth:'Living Room',fifth:'Bathroom',sixth:'View'},images:['https://images.unsplash.com/photo-1501183638710-841dd1904471?w=800','https://images.unsplash.com/photo-1554995207-c18c203602cb?w=800','https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800','https://images.unsplash.com/photo-1560448075-bb4caa6c0c39?w=800','https://images.unsplash.com/photo-1560184897-ae75f418493e?w=800','https://images.unsplash.com/photo-1560185009-5bf9f2849488?w=800'],contact:{whatsapp:'+971 50 123 4567',phone:'+971 4 987 6543'},locationLink:'https://maps.google.com/?q=Dubai+Marina,Dubai,UAE',videoUrl:'https://www.youtube.com/embed/dQw4w9WgXcQ',userId:'user',status:'approved',createdAt:day2.toISOString(),availableFrom:in1day.toISOString(),availableIn:'1 day',timerUpdatedAt:day2.toISOString(),nearestPlaces:[{name:'Marina Mall',category:'Market',mapLink:'https://maps.google.com/?q=Marina+Mall,Dubai'},{name:'Mediclinic',category:'Hospital',mapLink:'https://maps.google.com/?q=Mediclinic+Dubai+Marina'}]},
+        {id:2,profileCode:'562',title:'Luxury Villa with Pool',city:'Dubai',area:'Palm Jumeirah',subArea:'Shoreline',type:'5 BHK Villa',price:8500000,propertyStatus:'sale',rentalType:'sale',bedrooms:5,bathrooms:7,areaSize:5000,description:'Luxury villa with private pool and beach access.',amenities:{balcony:'yes',attachedWashroom:'yes',window:'yes',commonWashroom:'no',fullClosed:'yes',genderPreference:'female',kidsAllowed:'yes',bachelorsAllowed:'no'},imageLabels:{main:'Balcony',second:'Master Bedroom',third:'Kitchen',fourth:'Pool',fifth:'Garden',sixth:'View'},images:['https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800','https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800'],contact:{whatsapp:'+971 50 987 6543',phone:'+971 4 123 4567'},locationLink:'https://maps.google.com/?q=Palm+Jumeirah,Dubai,UAE',videoUrl:'https://www.youtube.com/embed/3AtDnEC4zak',userId:'user',status:'approved',createdAt:day1.toISOString(),availableFrom:in7days.toISOString(),availableIn:'7 days',timerUpdatedAt:day1.toISOString(),nearestPlaces:[{name:'Nakheel Mall',category:'Market',mapLink:'https://maps.google.com/?q=Nakheel+Mall'},{name:'Palm Mosque',category:'Mosque',mapLink:'https://maps.google.com/?q=Palm+Mosque'}]},
+        {id:3,profileCode:'563',title:'Modern 2BHK Near Mall',city:'Abu Dhabi',area:'Al Reem Island',subArea:'',type:'2 BHK',price:95000,propertyStatus:'rent',rentalType:'yearly',bedrooms:2,bathrooms:2,areaSize:1200,description:'Modern 2 BHK apartment with great amenities.',amenities:{balcony:'yes',attachedWashroom:'yes',window:'yes',commonWashroom:'no',fullClosed:'no',genderPreference:'male',kidsAllowed:'yes',bachelorsAllowed:'yes'},imageLabels:{main:'Living Room',second:'Bedroom 1',third:'Kitchen',fourth:'Bedroom 2',fifth:'Bathroom',sixth:'View'},images:['https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800','https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800','https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800','https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800','https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800','https://images.unsplash.com/photo-1560185007-c5ca9d2c014d?w=800'],contact:{whatsapp:'+971 55 456 7890',phone:'+971 2 345 6789'},locationLink:'https://maps.google.com/?q=Al+Reem+Island,Abu+Dhabi,UAE',videoUrl:'https://www.youtube.com/embed/ScMzIvxBSi4',userId:'user',status:'approved',createdAt:day0.toISOString(),availableFrom:in3days.toISOString(),availableIn:'3 days',timerUpdatedAt:day0.toISOString(),nearestPlaces:[]}
     ];
     localStorage.setItem('properties',JSON.stringify(properties));
 }
@@ -149,11 +149,11 @@ function addSubAreaFromUpload(){
     if(document.getElementById('uploadSubAreaMapLink'))document.getElementById('uploadSubAreaMapLink').value='';
     loadSubAreasForUpload();
     if(document.getElementById('propertySubArea'))document.getElementById('propertySubArea').value=newSub;
-    if(typeof loadExactLocationsForUpload==='function')loadExactLocationsForUpload();
+    if(typeof loadNearestPointsForUpload==='function')loadNearestPointsForUpload();
     showToast('Sub Area added: '+newSub);
 }
 
-// ===== EXACT LOCATION FUNCTIONS =====
+// ===== NEAREST PLACES FUNCTIONS =====
 const placeCategories = [
     {value:'school',label:'🏫 School',icon:'fa-school'},
     {value:'hospital',label:'🏥 Hospital',icon:'fa-hospital'},
@@ -169,26 +169,26 @@ const placeCategories = [
     {value:'bank',label:'🏦 Bank',icon:'fa-landmark'}
 ];
 
-function loadExactLocationsForUpload(){
+function loadNearestPointsForUpload(){
     const subArea=document.getElementById('propertySubArea')?.value||'';
-    const section=document.getElementById('exactLocationsSection');
-    const container=document.getElementById('exactLocationsContainer');
+    const section=document.getElementById('nearestPlacesSection');
+    const container=document.getElementById('nearestPlacesContainer');
     if(!section)return;
     if(!subArea){
         section.style.display='none';
         return;
     }
     section.style.display='block';
-    // Load existing exact locations for this sub area
-    const existingPlaces = customExactLocations[subArea] || [];
+    // Load existing nearest places for this sub area
+    const existingPlaces = customNearestPoints[subArea] || [];
     if(container){
         container.innerHTML = existingPlaces.map((place, idx) => `
-            <div class="exact-location-item" data-idx="${idx}">
+            <div class="nearest-place-item" data-idx="${idx}">
                 <div class="np-header">
                     <i class="fas ${placeCategories.find(c=>c.value===place.category)?.icon || 'fa-map-marker-alt'}"></i>
                     <strong>${place.name}</strong>
                     <span class="np-category">${placeCategories.find(c=>c.value===place.category)?.label || place.category}</span>
-                    <button type="button" class="np-remove" onclick="removeExactLocation('${subArea.replace(/'/g,"\\'")}', '${place.name.replace(/'/g,"\\'")}')">
+                    <button type="button" class="np-remove" onclick="removeNearestPlace('${subArea.replace(/'/g,"\\'")}', '${place.name.replace(/'/g,"\\'")}')">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -196,28 +196,28 @@ function loadExactLocationsForUpload(){
             </div>
         `).join('');
         if(existingPlaces.length === 0){
-            container.innerHTML = '<p class="np-empty">No exact locations added yet. Use the form below to add places like schools, hospitals, mosques, markets, etc.</p>';
+            container.innerHTML = '<p class="np-empty">No nearest places added yet. Use the form below to add places like schools, hospitals, mosques, markets, etc.</p>';
         }
     }
     // Populate category dropdown
-    const catSelect = document.getElementById('exactLocationCategory');
+    const catSelect = document.getElementById('nearestPlaceCategory');
     if(catSelect){
         catSelect.innerHTML = placeCategories.map(c => `<option value="${c.value}">${c.label}</option>`).join('');
     }
 }
 
-function addExactLocation(){
+function addNearestPlace(){
     const subArea = document.getElementById('propertySubArea')?.value||'';
-    const name = document.getElementById('newExactLocationName')?.value.trim();
-    const category = document.getElementById('exactLocationCategory')?.value;
-    const mapLink = document.getElementById('newExactLocationMapLink')?.value.trim();
+    const name = document.getElementById('newNearestPlaceName')?.value.trim();
+    const category = document.getElementById('nearestPlaceCategory')?.value;
+    const mapLink = document.getElementById('newNearestPlaceMapLink')?.value.trim();
     
     if(!subArea){
         showToast('Please select a Sub Area first');
         return;
     }
     if(!name){
-        showToast('Please enter a location name');
+        showToast('Please enter a place name');
         return;
     }
     if(!category){
@@ -225,45 +225,45 @@ function addExactLocation(){
         return;
     }
     
-    if(!customExactLocations[subArea]) customExactLocations[subArea] = [];
-    if(customExactLocations[subArea].find(p => p.name.toLowerCase() === name.toLowerCase())){
-        showToast('This location already exists for this sub area');
+    if(!customNearestPoints[subArea]) customNearestPoints[subArea] = [];
+    if(customNearestPoints[subArea].find(p => p.name.toLowerCase() === name.toLowerCase())){
+        showToast('This place already exists for this sub area');
         return;
     }
     
-    customExactLocations[subArea].push({
+    customNearestPoints[subArea].push({
         name: name,
         category: category,
         mapLink: mapLink || `https://maps.google.com/?q=${encodeURIComponent(name + ',' + subArea + ',UAE')}`
     });
-    localStorage.setItem('customExactLocations', JSON.stringify(customExactLocations));
+    localStorage.setItem('customNearestPoints', JSON.stringify(customNearestPoints));
     
     // Clear inputs
-    if(document.getElementById('newExactLocationName')) document.getElementById('newExactLocationName').value = '';
-    if(document.getElementById('newExactLocationMapLink')) document.getElementById('newExactLocationMapLink').value = '';
+    if(document.getElementById('newNearestPlaceName')) document.getElementById('newNearestPlaceName').value = '';
+    if(document.getElementById('newNearestPlaceMapLink')) document.getElementById('newNearestPlaceMapLink').value = '';
     
-    loadExactLocationsForUpload();
+    loadNearestPointsForUpload();
     showToast(`Added: ${name} (${placeCategories.find(c=>c.value===category)?.label})`);
 }
 
-function removeExactLocation(subArea, name){
-    if(!confirm(`Remove "${name}" from exact locations?`)) return;
-    if(customExactLocations[subArea]){
-        customExactLocations[subArea] = customExactLocations[subArea].filter(p => p.name !== name);
-        localStorage.setItem('customExactLocations', JSON.stringify(customExactLocations));
-        loadExactLocationsForUpload();
-        showToast('Location removed: ' + name);
+function removeNearestPlace(subArea, name){
+    if(!confirm(`Remove "${name}" from nearest places?`)) return;
+    if(customNearestPoints[subArea]){
+        customNearestPoints[subArea] = customNearestPoints[subArea].filter(p => p.name !== name);
+        localStorage.setItem('customNearestPoints', JSON.stringify(customNearestPoints));
+        loadNearestPointsForUpload();
+        showToast('Removed: ' + name);
     }
 }
 
-function getSelectedExactLocations(){
+function getSelectedNearestPlaces(){
     const subArea = document.getElementById('propertySubArea')?.value||'';
     const selectedPlaces = [];
-    const checkboxes = document.querySelectorAll('#exactLocationsContainer input[type="checkbox"]:checked');
+    const checkboxes = document.querySelectorAll('#nearestPlacesContainer input[type="checkbox"]:checked');
     checkboxes.forEach(cb => {
         const idx = parseInt(cb.getAttribute('data-idx'));
-        if(!isNaN(idx) && customExactLocations[subArea] && customExactLocations[subArea][idx]){
-            selectedPlaces.push(customExactLocations[subArea][idx]);
+        if(!isNaN(idx) && customNearestPoints[subArea] && customNearestPoints[subArea][idx]){
+            selectedPlaces.push(customNearestPoints[subArea][idx]);
         }
     });
     return selectedPlaces;
@@ -506,12 +506,12 @@ function buildShareText(p){
     if(p.amenities?.window==='yes')amenList.push('Window');
     if(p.amenities?.commonWashroom==='yes')amenList.push('Common Washroom');
     if(p.amenities?.fullClosed==='yes')amenList.push('Full Closed');
-    // Add exact locations to share text
-    let exactLocationText = '';
-    if(p.exactLocations && p.exactLocations.length > 0){
-        exactLocationText = '\n\n📍 Exact Location:\n' + p.exactLocations.map(pl => `  • ${pl.name} (${placeCategories.find(c=>c.value===pl.category)?.label || pl.category})`).join('\n');
+    // Add nearest places to share text
+    let nearestText = '';
+    if(p.nearestPlaces && p.nearestPlaces.length > 0){
+        nearestText = '\n\n📍 Nearby:\n' + p.nearestPlaces.map(pl => `  • ${pl.name} (${placeCategories.find(c=>c.value===pl.category)?.label || pl.category})`).join('\n');
     }
-    return['🏢 *USERS PROPERTIES UAE*','📌 Code: '+(p.profileCode||'—'),'','🏠 *'+(p.title||'')+'*','📍 '+(p.subArea?p.subArea+', ':'')+p.area+', '+p.city,'💰 AED '+(p.price||0).toLocaleString()+(p.rentalType&&p.rentalType!=='sale'?' / '+(rentalMap[p.rentalType]||p.rentalType):''),'🏷️ '+(statusMap[p.propertyStatus]||''),'','📐 '+(p.type||'')+' | '+(p.areaSize||'')+' Sq Ft'+(p.bedrooms>0?' | '+p.bedrooms+' Bed':'')+' | '+(p.bathrooms||'')+' Bath',amenList.length>0?'✨ '+amenList.join(', '):'',p.availableIn?'⏰ Available In: '+p.availableIn:'',exactLocationText,'',p.description?'📝 '+p.description:'','','📞 WA: '+(p.contact?.whatsapp||'—'),'📞 Ph: '+(p.contact?.phone||'—'),'','━━━━━━━━━━━━━━━━━━━━','🌐 UAE Properties Portal'].filter(l=>l!==null&&l!==undefined&&l!=='').join('\n');
+    return['🏢 *USERS PROPERTIES UAE*','📌 Code: '+(p.profileCode||'—'),'','🏠 *'+(p.title||'')+'*','📍 '+(p.subArea?p.subArea+', ':'')+p.area+', '+p.city,'💰 AED '+(p.price||0).toLocaleString()+(p.rentalType&&p.rentalType!=='sale'?' / '+(rentalMap[p.rentalType]||p.rentalType):''),'🏷️ '+(statusMap[p.propertyStatus]||''),'','📐 '+(p.type||'')+' | '+(p.areaSize||'')+' Sq Ft'+(p.bedrooms>0?' | '+p.bedrooms+' Bed':'')+' | '+(p.bathrooms||'')+' Bath',amenList.length>0?'✨ '+amenList.join(', '):'',p.availableIn?'⏰ Available In: '+p.availableIn:'',nearestText,'',p.description?'📝 '+p.description:'','','📞 WA: '+(p.contact?.whatsapp||'—'),'📞 Ph: '+(p.contact?.phone||'—'),'','━━━━━━━━━━━━━━━━━━━━','🌐 UAE Properties Portal'].filter(l=>l!==null&&l!==undefined&&l!=='').join('\n');
 }
 async function shareProperty(id){
     const p=properties.find(pr=>pr.id===id);if(!p)return;
