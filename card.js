@@ -37,6 +37,70 @@ function buildPropertyCardHTML(p){
         </div>`
         : '';
 
+    // ===== EXACT LOCATION WITH GOOGLE MAPS LINK =====
+    // Build Google Maps link from coordinates OR from address
+    let exactLocationHTML = '';
+    let googleMapsLink = '';
+    
+    if(p.location && p.location.lat && p.location.lng) {
+        // If coordinates are available
+        googleMapsLink = `https://www.google.com/maps?q=${p.location.lat},${p.location.lng}`;
+        exactLocationHTML = `
+            <div class="location-item exact-location">
+                <i class="fas fa-map-marker-alt" style="color:#ea4335;"></i>
+                <span><strong>📍 Exact Location:</strong>
+                    <a href="${googleMapsLink}" target="_blank" class="google-maps-link" onclick="event.stopPropagation()">
+                        <i class="fab fa-google"></i> View on Google Maps
+                        <i class="fas fa-external-link-alt" style="font-size:10px; margin-left:4px;"></i>
+                    </a>
+                </span>
+            </div>
+        `;
+    } else if(p.location && p.location.address) {
+        // If only address is available (no coordinates)
+        googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.location.address)}`;
+        exactLocationHTML = `
+            <div class="location-item exact-location">
+                <i class="fas fa-map-marker-alt" style="color:#ea4335;"></i>
+                <span><strong>📍 Exact Location:</strong>
+                    <span class="location-address">${p.location.address}</span>
+                    <a href="${googleMapsLink}" target="_blank" class="google-maps-link" onclick="event.stopPropagation()">
+                        <i class="fab fa-google"></i> Get Directions
+                        <i class="fas fa-external-link-alt" style="font-size:10px; margin-left:4px;"></i>
+                    </a>
+                </span>
+            </div>
+        `;
+    } else if(p.googleMapsLink) {
+        // If direct Google Maps link is provided
+        googleMapsLink = p.googleMapsLink;
+        exactLocationHTML = `
+            <div class="location-item exact-location">
+                <i class="fas fa-map-marker-alt" style="color:#ea4335;"></i>
+                <span><strong>📍 Exact Location:</strong>
+                    <a href="${googleMapsLink}" target="_blank" class="google-maps-link" onclick="event.stopPropagation()">
+                        <i class="fab fa-google"></i> Open in Google Maps
+                        <i class="fas fa-external-link-alt" style="font-size:10px; margin-left:4px;"></i>
+                    </a>
+                </span>
+            </div>
+        `;
+    } else if(p.locationLink) {
+        // Fallback to existing locationLink
+        googleMapsLink = p.locationLink;
+        exactLocationHTML = `
+            <div class="location-item exact-location">
+                <i class="fas fa-map-marker-alt" style="color:#ea4335;"></i>
+                <span><strong>📍 Exact Location:</strong>
+                    <a href="${googleMapsLink}" target="_blank" class="google-maps-link" onclick="event.stopPropagation()">
+                        <i class="fab fa-google"></i> View Location
+                        <i class="fas fa-external-link-alt" style="font-size:10px; margin-left:4px;"></i>
+                    </a>
+                </span>
+            </div>
+        `;
+    }
+
     // Nearest Places HTML
     let nearestPlacesHTML = '';
     if(p.nearestPlaces && p.nearestPlaces.length > 0){
@@ -115,6 +179,7 @@ function buildPropertyCardHTML(p){
                 <span><strong>Area:</strong> ${p.area}</span>
             </div>
             ${subAreaHTML}
+            ${exactLocationHTML}
         </div>
 
         <!-- Nearby Places — right after location -->
@@ -189,7 +254,4 @@ function buildPropertyCardHTML(p){
 
         </div>
     </div>`;
-
-
-
 }
