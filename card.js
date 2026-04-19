@@ -37,7 +37,7 @@ function buildPropertyCardHTML(p){
         </div>`
         : '';
 
-    // Nearest Places HTML
+    // Exact Location HTML
     let nearestPlacesHTML = '';
     if(p.nearestPlaces && p.nearestPlaces.length > 0){
         const categoryIcons = {
@@ -55,11 +55,11 @@ function buildPropertyCardHTML(p){
             'bank': 'fa-landmark'
         };
         nearestPlacesHTML = `
-            <div class="nearest-places-section">
-                <div class="nearest-places-title"><i class="fas fa-location-dot"></i> Nearby Places</div>
-                <div class="nearest-places-list">
+            <div class="exact-location-section">
+                <div class="exact-location-title"><i class="fas fa-location-dot"></i> Exact Location</div>
+                <div class="exact-location-list">
                     ${p.nearestPlaces.map(place => `
-                        <div class="nearest-place-chip" onclick="event.stopPropagation();window.open('${place.mapLink || `https://maps.google.com/?q=${encodeURIComponent(place.name)}`}', '_blank')">
+                        <div class="exact-location-chip" onclick="event.stopPropagation();window.open('${place.mapLink || `https://maps.google.com/?q=${encodeURIComponent(place.name)}`}', '_blank')">
                             <i class="fas ${categoryIcons[place.category] || 'fa-map-marker-alt'}"></i>
                             <span>${place.name}</span>
                             <small>${place.category ? place.category.charAt(0).toUpperCase() + place.category.slice(1) : ''}</small>
@@ -117,7 +117,7 @@ function buildPropertyCardHTML(p){
             ${subAreaHTML}
         </div>
 
-        <!-- Nearby Places — right after location -->
+        <!-- Exact Location — right after location -->
         ${nearestPlacesHTML}
 
         <!-- Property Features: size · beds · baths · type -->
