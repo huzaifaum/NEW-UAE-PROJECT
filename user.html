@@ -104,7 +104,7 @@
             <div class="form-group"><label>Area *</label><select id="propertyArea" onchange="loadSubAreasForUpload()"></select><div class="add-area-input" style="margin-top:6px"><input type="text" id="uploadNewAreaInput" placeholder="Add new area..." style="flex:1;padding:0.6rem 0.8rem;background:#fff;border:2px solid var(--border);border-radius:10px;color:#333;font-size:0.85rem"><button type="button" onclick="addAreaFromUpload()" style="padding:0.6rem 0.9rem;background:var(--primary);border:none;border-radius:10px;color:#000;font-weight:700;cursor:pointer"><i class="fas fa-plus"></i></button></div></div>
             <div class="form-group">
               <label>Sub Area</label>
-              <select id="propertySubArea" style="margin-bottom:6px" onchange="loadNearestPointsForUpload()"><option value="">Select Sub Area</option></select>
+              <select id="propertySubArea" style="margin-bottom:6px" onchange="loadExactLocationsForUpload()"><option value="">Select Sub Area</option></select>
               <div class="add-area-input" style="margin-top:6px">
                 <input type="text" id="uploadNewSubAreaInput" placeholder="Add sub area..." style="flex:1;padding:0.6rem 0.8rem;background:#fff;border:2px solid var(--border);border-radius:10px;color:#333;font-size:0.85rem">
                 <button type="button" onclick="addSubAreaFromUpload()" style="padding:0.6rem 0.9rem;background:var(--primary);border:none;border-radius:10px;color:#000;font-weight:700;cursor:pointer"><i class="fas fa-plus"></i></button>
@@ -114,35 +114,35 @@
               </div>
             </div>
 
-            <!-- Nearby Places Section -->
-            <div class="form-group" id="nearestPointSection" style="display:block;border:2px solid var(--primary);border-radius:14px;padding:14px;background:rgba(201,162,39,0.06)">
-              <label style="color:var(--primary);font-weight:700;font-size:0.95rem"><i class="fas fa-map-marker-alt"></i> Nearby Places</label>
+            <!-- Exact Location Section -->
+            <div class="form-group" id="exactLocationSection" style="display:block;border:2px solid var(--primary);border-radius:14px;padding:14px;background:rgba(201,162,39,0.06)">
+              <label style="color:var(--primary);font-weight:700;font-size:0.95rem"><i class="fas fa-map-marker-alt"></i> Exact Location</label>
               <p style="font-size:11px;color:#888;margin:4px 0 10px">Select or add nearby places like malls, metro stations, schools, etc.</p>
 
-              <select id="nearestPointSelect" style="margin-bottom:8px;width:100%;padding:0.6rem 0.8rem;background:#fff;border:2px solid var(--border);border-radius:10px;color:#333;font-size:0.85rem" onchange="onNearestPointSelect()">
-                <option value="">-- Select Nearby Place --</option>
+              <select id="exactLocationSelect" style="margin-bottom:8px;width:100%;padding:0.6rem 0.8rem;background:#fff;border:2px solid var(--border);border-radius:10px;color:#333;font-size:0.85rem" onchange="onExactLocationSelect()">
+                <option value="">-- Select Exact Location --</option>
               </select>
 
-              <div id="nearestPointMapDisplay" style="display:none;margin-bottom:8px">
-                <button type="button" onclick="openNearestPointMap()" style="width:100%;padding:0.6rem;background:linear-gradient(135deg,#4285f4,#34a853);border:none;border-radius:10px;color:#fff;font-weight:600;cursor:pointer;font-size:0.85rem">
+              <div id="exactLocationMapDisplay" style="display:none;margin-bottom:8px">
+                <button type="button" onclick="openExactLocationMap()" style="width:100%;padding:0.6rem;background:linear-gradient(135deg,#4285f4,#34a853);border:none;border-radius:10px;color:#fff;font-weight:600;cursor:pointer;font-size:0.85rem">
                   <i class="fas fa-map-marker-alt"></i> View on Google Map
                 </button>
               </div>
 
               <div style="border-top:1px solid var(--border);margin-top:8px;padding-top:10px">
-                <p style="font-size:11px;color:#888;margin:0 0 6px"><i class="fas fa-plus-circle" style="color:var(--primary)"></i> Add New Nearby Place:</p>
+                <p style="font-size:11px;color:#888;margin:0 0 6px"><i class="fas fa-plus-circle" style="color:var(--primary)"></i> Add New Exact Location:</p>
                 <div class="add-area-input" style="margin-bottom:6px">
-                  <input type="text" id="newNearestPointName" placeholder="Place name (e.g., Dubai Mall, Metro Station)" style="flex:1;padding:0.6rem 0.8rem;background:#fff;border:2px solid var(--border);border-radius:10px;color:#333;font-size:0.85rem">
+                  <input type="text" id="newExactLocationName" placeholder="Location name (e.g., Dubai Mall, Metro Station)" style="flex:1;padding:0.6rem 0.8rem;background:#fff;border:2px solid var(--border);border-radius:10px;color:#333;font-size:0.85rem">
                 </div>
                 <div class="add-area-input" style="margin-bottom:6px">
-                  <input type="url" id="newNearestPointMapLink" placeholder="Google Maps link (https://maps.google.com/...)" style="flex:1;padding:0.6rem 0.8rem;background:#fff;border:2px solid var(--border);border-radius:10px;color:#333;font-size:0.85rem">
+                  <input type="url" id="newExactLocationMapLink" placeholder="Google Maps link (https://maps.google.com/...)" style="flex:1;padding:0.6rem 0.8rem;background:#fff;border:2px solid var(--border);border-radius:10px;color:#333;font-size:0.85rem">
                 </div>
-                <button type="button" onclick="addNearestPoint()" style="width:100%;padding:0.6rem;background:var(--primary);border:none;border-radius:10px;color:#000;font-weight:700;cursor:pointer;font-size:0.85rem">
-                  <i class="fas fa-plus"></i> Add Nearby Place
+                <button type="button" onclick="addExactLocation()" style="width:100%;padding:0.6rem;background:var(--primary);border:none;border-radius:10px;color:#000;font-weight:700;cursor:pointer;font-size:0.85rem">
+                  <i class="fas fa-plus"></i> Add Exact Location
                 </button>
               </div>
 
-              <div id="nearestPointsList" style="margin-top:8px;max-height:160px;overflow-y:auto"></div>
+              <div id="exactLocationsList" style="margin-top:8px;max-height:160px;overflow-y:auto"></div>
             </div>
 
             <div class="form-group"><label>Property Type *</label><select id="propertyType"><optgroup label="Residential"><option value="Studio Apartment">Studio Apartment</option><option value="Bed Space">Bed Space</option><option value="Partition">Partition</option><option value="Room">Room</option><option value="Hall">Hall</option></optgroup><optgroup label="Apartments (BHK)"><option value="1 BHK">1 BHK</option><option value="2 BHK">2 BHK</option><option value="3 BHK">3 BHK</option><option value="4 BHK">4 BHK</option><option value="5 BHK">5 BHK</option><option value="6 BHK">6 BHK</option><option value="7 BHK">7 BHK</option><option value="8 BHK">8 BHK</option><option value="9 BHK">9 BHK</option><option value="10 BHK">10 BHK</option></optgroup><optgroup label="Villas"><option value="Villa">Villa</option><option value="1 BHK Villa">1 BHK Villa</option><option value="2 BHK Villa">2 BHK Villa</option><option value="3 BHK Villa">3 BHK Villa</option><option value="4 BHK Villa">4 BHK Villa</option><option value="5 BHK Villa">5 BHK Villa</option></optgroup><optgroup label="Commercial"><option value="Warehouse">Warehouse</option><option value="Shop">Shop</option><option value="Office - Building">Office - Building</option><option value="Office - Street">Office - Street</option></optgroup></select></div>
@@ -332,12 +332,12 @@ function uploadProperty(){
     if(!currentUser||currentUser.type!=='user'){alert('Please login as Property User.');return;}
     const imageUrls=getUploadedImages();const labels=getImageLabels();const finalVideoUrl=getFinalVideoUrl();
     const subAreaSel=document.getElementById('propertySubArea')?.value||'';
-    const npSel=document.getElementById('nearestPointSelect');
+    const npSel=document.getElementById('exactLocationSelect');
     const selectedNP=npSel?npSel.value:'';
     const subKey=subAreaSel||'__general__';
-    const npData=customNearestPoints[subKey]||[];
+    const npData=customExactLocations[subKey]||[];
     const npObj=npData.find(n=>n.name===selectedNP)||null;
-    const newProperty={id:Date.now(),profileCode:document.getElementById('profileCode')?.value||Math.floor(560+Math.random()*100),title:document.getElementById('propertyTitle').value,city:document.getElementById('propertyCity').value,area:document.getElementById('propertyArea').value,subArea:subAreaSel,nearestPoint:npObj?{name:npObj.name,mapLink:npObj.mapLink}:null,type:document.getElementById('propertyType').value,price:parseFloat(document.getElementById('propertyPrice').value),propertyStatus:'rent',rentalType:document.getElementById('propertyRentalType').value,bedrooms:parseInt(document.getElementById('propertyBedrooms').value)||0,bathrooms:parseInt(document.getElementById('propertyBathrooms').value)||1,areaSize:parseFloat(document.getElementById('propertyAreaSize').value)||0,description:document.getElementById('propertyDescription').value,amenities:{balcony:document.getElementById('balcony').value,attachedWashroom:document.getElementById('attachedWashroom').value,window:document.getElementById('window').value,commonWashroom:document.getElementById('commonWashroom').value,separateWashroom:document.getElementById('separateWashroom').value,fullClosed:document.getElementById('fullClosed').value,genderPreference:document.getElementById('genderPreference').value,kidsAllowed:document.getElementById('kidsAllowed').value,bachelorsAllowed:document.getElementById('bachelorsAllowed').value},imageLabels:labels,images:imageUrls,contact:{whatsapp:document.getElementById('whatsappNumber').value||'',phone:document.getElementById('phoneNumber').value||''},locationLink:document.getElementById('locationLink')?.value||'',videoUrl:finalVideoUrl,availableIn:'',availableFrom:'',status:'pending',userId:currentUser.username,createdAt:new Date().toISOString(),timerUpdatedAt:new Date().toISOString()};
+    const newProperty={id:Date.now(),profileCode:document.getElementById('profileCode')?.value||Math.floor(560+Math.random()*100),title:document.getElementById('propertyTitle').value,city:document.getElementById('propertyCity').value,area:document.getElementById('propertyArea').value,subArea:subAreaSel,exactLocation:npObj?{name:npObj.name,mapLink:npObj.mapLink}:null,type:document.getElementById('propertyType').value,price:parseFloat(document.getElementById('propertyPrice').value),propertyStatus:'rent',rentalType:document.getElementById('propertyRentalType').value,bedrooms:parseInt(document.getElementById('propertyBedrooms').value)||0,bathrooms:parseInt(document.getElementById('propertyBathrooms').value)||1,areaSize:parseFloat(document.getElementById('propertyAreaSize').value)||0,description:document.getElementById('propertyDescription').value,amenities:{balcony:document.getElementById('balcony').value,attachedWashroom:document.getElementById('attachedWashroom').value,window:document.getElementById('window').value,commonWashroom:document.getElementById('commonWashroom').value,separateWashroom:document.getElementById('separateWashroom').value,fullClosed:document.getElementById('fullClosed').value,genderPreference:document.getElementById('genderPreference').value,kidsAllowed:document.getElementById('kidsAllowed').value,bachelorsAllowed:document.getElementById('bachelorsAllowed').value},imageLabels:labels,images:imageUrls,contact:{whatsapp:document.getElementById('whatsappNumber').value||'',phone:document.getElementById('phoneNumber').value||''},locationLink:document.getElementById('locationLink')?.value||'',videoUrl:finalVideoUrl,availableIn:'',availableFrom:'',status:'pending',userId:currentUser.username,createdAt:new Date().toISOString(),timerUpdatedAt:new Date().toISOString()};
     if(!newProperty.title||!newProperty.city||!newProperty.area||!newProperty.type||!newProperty.price){alert('Please fill all required fields');return;}
     properties.push(newProperty);localStorage.setItem('properties',JSON.stringify(properties));
     _uploadedVideoDataUrl=null;['videoFileInput','videoUrlPreview','videoFilePreview'].forEach(id=>{const el=document.getElementById(id);if(el){if(el.tagName==='INPUT')el.value='';else{el.classList.remove('show');el.innerHTML='';}}});
@@ -346,80 +346,80 @@ function uploadProperty(){
     showToast('Property uploaded! Waiting for admin approval.');showSection('properties',document.querySelector('.nav-link'));
 }
 
-// Nearby Points Functions
-function loadNearestPointsForUpload(){
+// Exact Location Functions
+function loadExactLocationsForUpload(){
     const subArea=document.getElementById('propertySubArea')?.value||'';
-    const section=document.getElementById('nearestPointSection');
-    const sel=document.getElementById('nearestPointSelect');
-    const display=document.getElementById('nearestPointMapDisplay');
-    const list=document.getElementById('nearestPointsList');
+    const section=document.getElementById('exactLocationSection');
+    const sel=document.getElementById('exactLocationSelect');
+    const display=document.getElementById('exactLocationMapDisplay');
+    const list=document.getElementById('exactLocationsList');
     if(!section)return;
     section.style.display='block';
     if(display)display.style.display='none';
     const key=subArea||'__general__';
-    const points=customNearestPoints[key]||[];
+    const points=customExactLocations[key]||[];
     if(sel){
-        sel.innerHTML='<option value="">-- Select Nearby Place --</option>'+points.map(p=>`<option value="${p.name}">${p.name}${p.mapLink?' \uD83D\uDCCD':''}</option>`).join('');
+        sel.innerHTML='<option value="">-- Select Exact Location --</option>'+points.map(p=>`<option value="${p.name}">${p.name}${p.mapLink?' \uD83D\uDCCD':''}</option>`).join('');
     }
-    renderNearestPointsList(key,list,points);
+    renderExactLocationsList(key,list,points);
 }
 
-function onNearestPointSelect(){
+function onExactLocationSelect(){
     const subArea=document.getElementById('propertySubArea')?.value||'';
-    const selVal=document.getElementById('nearestPointSelect')?.value||'';
-    const display=document.getElementById('nearestPointMapDisplay');
+    const selVal=document.getElementById('exactLocationSelect')?.value||'';
+    const display=document.getElementById('exactLocationMapDisplay');
     if(!display)return;
     if(!selVal){display.style.display='none';return;}
     const key=subArea||'__general__';
-    const points=customNearestPoints[key]||[];
+    const points=customExactLocations[key]||[];
     const found=points.find(p=>p.name===selVal);
     display.style.display=(found&&found.mapLink)?'block':'none';
 }
 
-function openNearestPointMap(){
+function openExactLocationMap(){
     const subArea=document.getElementById('propertySubArea')?.value||'';
-    const selVal=document.getElementById('nearestPointSelect')?.value||'';
+    const selVal=document.getElementById('exactLocationSelect')?.value||'';
     const key=subArea||'__general__';
-    const points=customNearestPoints[key]||[];
+    const points=customExactLocations[key]||[];
     const found=points.find(p=>p.name===selVal);
     if(found&&found.mapLink)window.open(found.mapLink,'_blank');
     else showToast('Google Maps link not available');
 }
 
-function addNearestPoint(){
+function addExactLocation(){
     const subArea=document.getElementById('propertySubArea')?.value||'';
-    const name=(document.getElementById('newNearestPointName')?.value||'').trim();
-    const mapLink=(document.getElementById('newNearestPointMapLink')?.value||'').trim();
+    const name=(document.getElementById('newExactLocationName')?.value||'').trim();
+    const mapLink=(document.getElementById('newExactLocationMapLink')?.value||'').trim();
     const key=subArea||'__general__';
     if(!name)return showToast('Please enter a place name');
-    if(!customNearestPoints[key])customNearestPoints[key]=[];
-    if(customNearestPoints[key].find(p=>p.name===name))return showToast('This place already exists');
-    customNearestPoints[key].push({name,mapLink});
-    localStorage.setItem('customNearestPoints',JSON.stringify(customNearestPoints));
-    if(document.getElementById('newNearestPointName'))document.getElementById('newNearestPointName').value='';
-    if(document.getElementById('newNearestPointMapLink'))document.getElementById('newNearestPointMapLink').value='';
-    loadNearestPointsForUpload();
-    if(document.getElementById('nearestPointSelect'))document.getElementById('nearestPointSelect').value=name;
-    onNearestPointSelect();
-    showToast('Nearby place added: '+name);
+    if(!customExactLocations[key])customExactLocations[key]=[];
+    if(customExactLocations[key].find(p=>p.name===name))return showToast('This location already exists');
+    customExactLocations[key].push({name,mapLink});
+    localStorage.setItem('customExactLocations',JSON.stringify(customExactLocations));
+    if(document.getElementById('newExactLocationName'))document.getElementById('newExactLocationName').value='';
+    if(document.getElementById('newExactLocationMapLink'))document.getElementById('newExactLocationMapLink').value='';
+    loadExactLocationsForUpload();
+    if(document.getElementById('exactLocationSelect'))document.getElementById('exactLocationSelect').value=name;
+    onExactLocationSelect();
+    showToast('Exact location added: '+name);
 }
 
-function removeNearestPoint(subArea,name){
+function removeExactLocation(subArea,name){
     if(!confirm(`Remove "${name}"?`))return;
-    if(customNearestPoints[subArea])customNearestPoints[subArea]=customNearestPoints[subArea].filter(p=>p.name!==name);
-    localStorage.setItem('customNearestPoints',JSON.stringify(customNearestPoints));
-    loadNearestPointsForUpload();
+    if(customExactLocations[subArea])customExactLocations[subArea]=customExactLocations[subArea].filter(p=>p.name!==name);
+    localStorage.setItem('customExactLocations',JSON.stringify(customExactLocations));
+    loadExactLocationsForUpload();
     showToast('Removed: '+name);
 }
 
-function renderNearestPointsList(subArea,container,points){
+function renderExactLocationsList(subArea,container,points){
     if(!container)return;
-    if(points.length===0){container.innerHTML='<p style="color:#aaa;font-size:11px;padding:4px">No nearby places added yet</p>';return;}
+    if(points.length===0){container.innerHTML='<p style="color:#aaa;font-size:11px;padding:4px">No exact locations added yet</p>';return;}
     container.innerHTML=points.map(p=>`
         <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 4px;border-bottom:1px solid var(--border);font-size:12px;gap:6px">
             <span style="flex:1;color:var(--text-secondary)">${p.name}</span>
             ${p.mapLink?`<a href="${p.mapLink}" target="_blank" style="color:#4285f4;font-size:11px;text-decoration:none;flex-shrink:0"><i class="fas fa-map-marker-alt"></i> Map</a>`:''}
-            <button onclick="removeNearestPoint('${subArea.replace(/'/g,"\\'")}','${p.name.replace(/'/g,"\\'")}');" style="background:var(--danger);color:#fff;border:none;border-radius:4px;width:20px;height:20px;cursor:pointer;flex-shrink:0;font-size:10px"><i class="fas fa-times"></i></button>
+            <button onclick="removeExactLocation('${subArea.replace(/'/g,"\\'")}','${p.name.replace(/'/g,"\\'")}');" style="background:var(--danger);color:#fff;border:none;border-radius:4px;width:20px;height:20px;cursor:pointer;flex-shrink:0;font-size:10px"><i class="fas fa-times"></i></button>
         </div>`).join('');
 }
 

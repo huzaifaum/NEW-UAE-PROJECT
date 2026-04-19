@@ -38,8 +38,8 @@ function buildPropertyCardHTML(p){
         : '';
 
     // Exact Location HTML
-    let exactLocationHTML = '';
-    if(p.nearestPlaces && p.nearestPlaces.length > 0){
+    let exactLocationsHTML = '';
+    if(p.exactLocations && p.exactLocations.length > 0){
         const categoryIcons = {
             'school': 'fa-school',
             'hospital': 'fa-hospital',
@@ -54,11 +54,11 @@ function buildPropertyCardHTML(p){
             'gym': 'fa-dumbbell',
             'bank': 'fa-landmark'
         };
-        exactLocationHTML = `
+        exactLocationsHTML = `
             <div class="exact-location-section">
                 <div class="exact-location-title"><i class="fas fa-location-dot"></i> Exact Location</div>
                 <div class="exact-location-list">
-                    ${p.nearestPlaces.map(place => `
+                    ${p.exactLocations.map(place => `
                         <div class="exact-location-chip" onclick="event.stopPropagation();window.open('${place.mapLink || `https://maps.google.com/?q=${encodeURIComponent(place.name)}`}', '_blank')">
                             <i class="fas ${categoryIcons[place.category] || 'fa-map-marker-alt'}"></i>
                             <span>${place.name}</span>
@@ -117,8 +117,8 @@ function buildPropertyCardHTML(p){
             ${subAreaHTML}
         </div>
 
-        <!-- Exact Location -->
-        ${exactLocationHTML}
+        <!-- Exact Location — right after location -->
+        ${exactLocationsHTML}
 
         <!-- Property Features: size · beds · baths · type -->
         <div class="property-features">
@@ -189,4 +189,7 @@ function buildPropertyCardHTML(p){
 
         </div>
     </div>`;
+
+
+
 }
