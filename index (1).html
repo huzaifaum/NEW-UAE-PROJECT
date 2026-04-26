@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>UAE Properties – Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+
+<style>
+/* ===== ROOT & RESET ===== */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+:root{
+  --primary:#c9a227;--primary-dark:#b48a1a;
+  --bg-primary:#0b1423;--bg-secondary:#141f33;
+  --bg-card:#ffffff;--border:#2a3b57;
+  --text-primary:#ffffff;--text-secondary:#fef3c7;
+  --text-muted:#9aa8b9;--danger:#ef4444;
+  --warning:#f59e0b;--success:#10b981;--gold:#fbbf24
+}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg-secondary)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:var(--primary)}
+body{background:var(--bg-primary);color:var(--text-primary);overflow-x:hidden}
+
+/* ===== ROLE SELECTOR PAGE ===== */
+.role-selector-page{
+  min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;padding:20px;
+  background:linear-gradient(rgba(0,0,0,0.8),rgba(0,0,0,0.8)),
+    url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200') center/cover no-repeat
+}
+.role-selector-box{
+  background:rgba(255,255,255,0.97);border-radius:24px;
+  padding:40px 30px;width:100%;max-width:480px;
+  box-shadow:0 30px 80px rgba(0,0,0,0.4);
+  border:1px solid rgba(201,162,39,0.3);text-align:center
+}
+.role-selector-logo{width:90px;height:90px;object-fit:contain;margin-bottom:14px;filter:drop-shadow(0 4px 8px rgba(201,162,39,0.3))}
+.role-selector-box h1{color:#1f3f5b;font-size:24px;font-weight:700;margin-bottom:6px}
+.role-selector-box p{color:#666;font-size:14px;margin-bottom:28px}
+.role-cards{display:flex;flex-direction:column;gap:14px}
+.role-card{
+  display:flex;align-items:center;gap:16px;padding:16px 20px;
+  border-radius:16px;cursor:pointer;transition:all 0.3s;border:2px solid #eee;
+  background:#fff;text-align:left
+}
+.role-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.12)}
+.role-card.admin-card:hover{border-color:#ef4444;background:rgba(239,68,68,0.04)}
+.role-card.user-card:hover{border-color:var(--primary);background:rgba(201,162,39,0.04)}
+.role-card.marketing-card:hover{border-color:#10b981;background:rgba(16,185,129,0.04)}
+.role-card-icon{
+  width:48px;height:48px;border-radius:14px;display:flex;
+  align-items:center;justify-content:center;font-size:20px;flex-shrink:0
+}
+.admin-card .role-card-icon{background:rgba(239,68,68,0.12);color:#ef4444}
+.user-card .role-card-icon{background:rgba(201,162,39,0.12);color:var(--primary)}
+.marketing-card .role-card-icon{background:rgba(16,185,129,0.12);color:#10b981}
+.role-card-text h3{font-size:15px;font-weight:700;color:#1a2a45;margin-bottom:2px}
+.role-card-text p{font-size:12px;color:#888}
+.role-card-arrow{margin-left:auto;color:#ccc;font-size:14px}
+
+/* ===== LOGIN ===== */
+.login-page{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;background:linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0.75)),url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800') center/cover no-repeat}
+.login-container{background:rgba(255,255,255,0.98);padding:30px;border-radius:20px;width:100%;max-width:420px;box-shadow:0 20px 50px rgba(0,0,0,0.3);border:1px solid rgba(201,162,39,0.3)}
+.header-brand{text-align:center;margin-bottom:25px}
+.header-logo{width:90px;height:90px;object-fit:contain;margin-bottom:15px;filter:drop-shadow(0 4px 8px rgba(201,162,39,0.3))}
+.header-brand h1{color:#1f3f5b;font-size:22px;font-weight:700;margin-bottom:5px}
+.subtitle{color:#333;font-size:15px;font-weight:500}
+.login-form .form-group{margin-bottom:1.2rem}
+.login-form label{display:block;margin-bottom:5px;color:#333;font-size:.9rem;font-weight:500}
+.login-form input{width:100%;padding:1rem;background:#fff;border:2px solid #ddd;border-radius:10px;color:#333;font-size:1rem;transition:all .3s}
+.login-form input:focus{outline:none;border-color:var(--primary)}
+.login-btn{width:100%;padding:1rem;background:var(--primary);color:#000;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:all .3s;margin-top:1rem}
+.login-btn:hover{background:var(--primary-dark);transform:translateY(-2px);box-shadow:0 5px 20px rgba(201,162,39,0.3)}
+.role-badge{display:inline-block;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:18px;text-transform:uppercase;letter-spacing:1px}
+.role-badge.admin{background:rgba(239,68,68,.15);color:#ef4444;border:1.5px solid #ef4444}
+.role-badge.user{background:rgba(201,162,39,.15);color:var(--primary);border:1.5px solid var(--primary)}
+.role-badge.marketing{background:rgba(16,185,129,.15);color:#10b981;border:1.5px solid #10b981}
+.back-to-roles{display:inline-flex;align-items:center;gap:6px;color:#888;font-size:13px;cursor:pointer;margin-top:14px;background:none;border:none;padding:0}
+.back-to-roles:hover{color:var(--primary)}
+
+/* ===== TOAST ===== */
+.notification-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#1a2a45;color:#fff;padding:12px 20px;border-radius:40px;font-size:13px;font-weight:600;z-index:9999;display:flex;align-items:center;gap:8px;border:1.5px solid var(--primary);box-shadow:0 8px 30px rgba(0,0,0,0.3);transition:all .3s;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis}
+.notification-toast.show{transform:translateX(-50%) translateY(0)}
+.notification-toast i{color:var(--primary)}
+
+/* ===== DASHBOARD ===== */
+.dashboard{display:none}
+.dashboard.active{display:block}
+
+/* ===== NAVBAR ===== */
+.navbar{
+  background:linear-gradient(135deg,#0b1423 0%,#1a2a45 100%);
+  padding:.7rem 1.2rem;
+  display:flex;justify-content:space-between;align-items:center;
+  border-bottom:3px solid var(--primary);
+  position:fixed;width:100%;top:0;z-index:1000;
+  gap:8px;box-shadow:0 4px 20px rgba(0,0,0,.3)
+}
+.logo-box{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo-img{width:44px;height:44px;object-fit:contain;filter:brightness(0) invert(1)}
+.logo-text{font-size:18px;font-weight:700;color:var(--primary);line-height:1.2}
+.logo-text span{display:block;font-size:11px;font-weight:500;color:#fff}
+
+/* NAV RIGHT */
+.nav-right{display:flex;align-items:center;gap:8px}
+.nav-links{display:flex;gap:4px;align-items:center}
+.nav-link{color:#fff;text-decoration:none;font-size:12px;cursor:pointer;padding:.4rem .8rem;border-radius:8px;transition:all .3s;position:relative;overflow:hidden}
+.nav-link::before{content:'';position:absolute;bottom:0;left:0;width:100%;height:2px;background:var(--primary);transform:translateX(-100%);transition:transform .3s}
+.nav-link:hover::before,.nav-link.active::before{transform:translateX(0)}
+.nav-link:hover,.nav-link.active{color:var(--primary);background:rgba(201,162,39,.1)}
+
+/* USER INFO - compact */
+.user-info{display:flex;align-items:center;gap:6px;padding:.35rem .8rem;background:rgba(255,255,255,.05);border-radius:50px;border:1.5px solid var(--border)}
+.user-avatar{width:26px;height:26px;background:linear-gradient(135deg,var(--primary) 0%,#ffd700 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#0b1423;font-weight:bold;font-size:12px;flex-shrink:0}
+.user-name{font-weight:500;color:#fff;font-size:12px;white-space:nowrap}
+.user-type{font-size:10px;color:var(--primary)}
+.user-details{display:flex;flex-direction:column}
+
+.logout-btn{background:transparent;border:1.5px solid var(--border);color:#fff;padding:.35rem 1rem;border-radius:25px;cursor:pointer;transition:all .3s;font-weight:500;font-size:12px;white-space:nowrap}
+.logout-btn:hover{border-color:var(--danger);color:var(--danger);background:rgba(239,68,68,.1)}
+
+/* HAMBURGER for mobile */
+.nav-hamburger{
+  display:none;flex-direction:column;gap:5px;cursor:pointer;
+  padding:6px;border-radius:8px;transition:background .2s;
+  border:none;background:transparent
+}
+.nav-hamburger:hover{background:rgba(255,255,255,.1)}
+.nav-hamburger span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;transition:all .3s}
+.nav-hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.nav-hamburger.open span:nth-child(2){opacity:0}
+.nav-hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+
+/* MOBILE DRAWER */
+.mobile-nav-drawer{
+  display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:999;
+  background:rgba(0,0,0,.5);backdrop-filter:blur(4px)
+}
+.mobile-nav-drawer.open{display:block}
+.mobile-drawer-content{
+  position:absolute;right:0;top:0;height:100%;width:min(280px,85vw);
+  background:linear-gradient(135deg,#0b1423,#1a2a45);
+  padding-top:70px;padding-bottom:20px;padding-left:20px;padding-right:20px;
+  overflow-y:auto;border-left:2px solid var(--primary);
+  display:flex;flex-direction:column;gap:8px
+}
+.drawer-user-card{
+  background:rgba(255,255,255,.06);border-radius:14px;padding:14px;
+  border:1.5px solid var(--border);margin-bottom:8px;
+  display:flex;align-items:center;gap:12px
+}
+.drawer-user-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0}
+.drawer-user-name{font-size:14px;font-weight:600;color:#fff}
+.drawer-user-type{font-size:11px;color:var(--primary)}
+.drawer-link{
+  display:flex;align-items:center;gap:10px;padding:12px 14px;
+  border-radius:12px;color:#fff;font-size:14px;cursor:pointer;
+  transition:all .2s;border:1.5px solid transparent
+}
+.drawer-link:hover,.drawer-link.active{background:rgba(201,162,39,.12);border-color:rgba(201,162,39,.3);color:var(--primary)}
+.drawer-link i{width:18px;text-align:center;color:var(--primary)}
+.drawer-divider{border:none;border-top:1px solid var(--border);margin:8px 0}
+.drawer-logout{
+  display:flex;align-items:center;gap:10px;padding:12px 14px;
+  border-radius:12px;color:#ef4444;font-size:14px;cursor:pointer;
+  border:1.5px solid rgba(239,68,68,.3);background:rgba(239,68,68,.06);
+  transition:all .2s;margin-top:auto
+}
+.drawer-logout:hover{background:rgba(239,68,68,.12)}
+.drawer-key-btn{
+  display:flex;align-items:center;gap:10px;padding:12px 14px;
+  border-radius:12px;color:#fff;font-size:14px;cursor:pointer;
+  border:1.5px solid var(--border);background:rgba(255,255,255,.04);
+  transition:all .2s
+}
+.drawer-key-btn:hover{border-color:var(--primary);color:var(--primary)}
+
+/* NOTIF BELL */
+.notif-bell-btn{display:none!important}
+.nav-center{display:none!important}
+.notif-bar{display:none!important}
+
+/* ===== SUB NAVBAR ===== */
+.sub-navbar{
+  position:fixed;top:68px;left:0;right:0;z-index:950;
+  background:linear-gradient(135deg,#0f1c30 0%,#1a2a45 100%);
+  border-bottom:2px solid rgba(201,162,39,.35);
+  box-shadow:0 4px 16px rgba(0,0,0,.25);
+  display:flex;align-items:center;gap:8px;padding:6px 14px;min-height:54px;
+  flex-wrap:wrap
+}
+.sub-navbar .sub-search-wrap{
+  flex:1;min-width:140px;display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.07);border:1.5px solid rgba(201,162,39,.28);
+  border-radius:30px;padding:6px 14px;transition:all .3s;position:relative;
+  max-width:380px
+}
+.sub-navbar .sub-search-wrap:focus-within{border-color:var(--primary);background:rgba(255,255,255,.11)}
+.sub-navbar .sub-search-wrap i.fa-search{color:var(--primary);font-size:12px;flex-shrink:0}
+.sub-navbar .sub-search-wrap input{background:transparent;border:none;color:#fff;font-size:12px;width:100%;outline:none;font-family:'Poppins',sans-serif}
+.sub-navbar .sub-search-wrap input::placeholder{color:rgba(255,255,255,.4)}
+.sub-navbar .sub-search-wrap .search-clear{display:none;background:none;border:none;color:rgba(255,255,255,.5);cursor:pointer;font-size:12px;padding:0}
+.sub-navbar .sub-search-wrap:focus-within .search-clear{display:block}
+.sub-notif-strip{flex:1;display:flex;align-items:center;gap:8px;overflow:hidden;min-height:40px;min-width:0}
+.sub-notif-label{color:var(--primary);font-size:11px;font-weight:700;display:flex;align-items:center;gap:5px;white-space:nowrap;flex-shrink:0}
+.sub-notif-items{display:flex;gap:6px;overflow-x:auto;flex:1;scrollbar-width:none}
+.sub-notif-items::-webkit-scrollbar{display:none}
+.sub-notif-chip{display:flex;align-items:center;gap:5px;background:rgba(201,162,39,.1);border:1.5px solid rgba(201,162,39,.25);border-radius:20px;padding:3px 10px;font-size:10px;color:#e0c97a;white-space:nowrap;cursor:pointer;transition:all .2s;flex-shrink:0}
+.sub-notif-chip:hover{background:rgba(201,162,39,.2)}
+.sub-notif-empty{font-size:10px;color:var(--text-muted);display:flex;align-items:center;gap:4px}
+.sub-notif-card{display:flex;align-items:center;gap:7px;background:rgba(201,162,39,.08);border:1.5px solid rgba(201,162,39,.2);border-radius:12px;padding:5px 9px;cursor:pointer;transition:all .2s;flex-shrink:0;min-width:180px;max-width:220px}
+.sub-notif-card:hover{background:rgba(201,162,39,.18);border-color:var(--primary)}
+.sub-notif-card.unread{border-color:var(--primary);background:rgba(201,162,39,.14)}
+.sub-notif-thumb{width:40px;height:32px;border-radius:7px;object-fit:cover;flex-shrink:0}
+.sub-notif-card-body{flex:1;min-width:0}
+.sub-notif-card-title{font-size:10px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub-notif-card-sub{font-size:9px;color:var(--text-muted)}
+.sub-notif-card-date{font-size:9px;color:#10b981}
+.sub-notif-card-price{font-size:9px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0}
+.sub-notif-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.sub-notif-mark-all{background:none;border:1.5px solid rgba(201,162,39,.35);color:var(--primary);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Poppins',sans-serif;white-space:nowrap}
+.sub-notif-mark-all:hover{background:rgba(201,162,39,.12)}
+.sub-notif-count{background:var(--primary);color:#000;border-radius:20px;padding:1px 6px;font-size:10px;font-weight:700;display:none}
+.search-dropdown{position:absolute;top:calc(100% + 8px);left:0;right:0;background:#1a2a45;border:2px solid rgba(201,162,39,.3);border-radius:14px;z-index:9999;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.4);display:none;max-height:340px;overflow-y:auto}
+.search-dropdown.show{display:block}
+.search-result-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .2s;border-bottom:1px solid rgba(255,255,255,.08)}
+.search-result-item:last-child{border-bottom:none}
+.search-result-item:hover{background:rgba(201,162,39,.15)}
+.sri-thumb{width:46px;height:36px;border-radius:8px;object-fit:cover;background:#2a3b57;flex-shrink:0}
+.sri-info{flex:1;min-width:0}
+.sri-title{font-size:12px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sri-sub{font-size:10px;color:var(--text-muted);margin-top:2px}
+.sri-price{font-size:11px;font-weight:700;color:var(--primary);flex-shrink:0}
+.search-no-results{padding:20px;text-align:center;color:#999;font-size:12px}
+
+/* ===== MAIN LAYOUT ===== */
+.main-container{display:flex;margin-top:122px;min-height:calc(100vh - 122px)}
+
+/* ===== SIDEBAR ===== */
+.filters-sidebar{width:260px;background:var(--bg-secondary);padding:1.2rem 1rem;position:fixed;height:calc(100vh - 122px);overflow-y:auto;border-right:2px solid var(--border);transition:transform .3s;z-index:800}
+.filters-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;position:sticky;top:0;background:var(--bg-secondary);padding:.6rem 0;z-index:10}
+.filters-header h3{color:var(--primary);font-size:1rem;display:flex;align-items:center;gap:.5rem}
+.clear-filters{color:var(--text-muted);cursor:pointer;font-size:.8rem;transition:color .3s;display:flex;align-items:center;gap:.3rem}
+.clear-filters:hover{color:var(--primary)}
+.filter-section{margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1.5px solid var(--border)}
+.filter-section h4{color:var(--text-primary);margin-bottom:.7rem;font-size:.9rem;display:flex;align-items:center;gap:.5rem}
+.filter-section h4 i{color:var(--primary)}
+.filter-options{display:flex;flex-direction:column;gap:.5rem;max-height:160px;overflow-y:auto;padding-right:.2rem}
+.filter-checkbox{display:flex;align-items:center;gap:.5rem;color:var(--text-secondary);cursor:pointer;padding:.3rem;border-radius:5px;transition:background .3s;font-size:.85rem}
+.filter-checkbox:hover{background:rgba(255,255,255,.1)}
+.filter-checkbox input[type="checkbox"]{accent-color:var(--primary);width:15px;height:15px;cursor:pointer}
+.filter-select{width:100%;padding:.7rem;background:var(--bg-card);border:2px solid var(--border);border-radius:10px;color:#333;margin-bottom:.4rem;cursor:pointer;font-size:.82rem}
+.filter-select:focus{outline:none;border-color:var(--primary)}
+.price-range{display:flex;gap:.4rem}
+.price-range input{width:50%;padding:.7rem;background:var(--bg-card);border:2px solid var(--border);border-radius:10px;color:#333;font-size:.82rem}
+.price-range input:focus{outline:none;border-color:var(--primary)}
+.radio-group{display:flex;flex-direction:column;gap:.4rem}
+.radio-label{display:flex;align-items:center;gap:.5rem;color:var(--text-secondary);cursor:pointer;padding:.3rem;border-radius:5px;transition:background .3s;font-size:.88rem}
+.radio-label:hover{background:rgba(255,255,255,.1)}
+.radio-label input[type="radio"]{accent-color:var(--primary);width:14px;height:14px}
+.apply-filters-btn{width:100%;padding:.8rem;background:var(--primary);color:#000;border:none;border-radius:10px;font-weight:600;cursor:pointer;transition:all .3s;margin-top:.6rem;display:flex;align-items:center;justify-content:center;gap:.5rem;font-size:.88rem}
+.apply-filters-btn:hover{background:var(--primary-dark);transform:translateY(-2px)}
+.content-area{flex:1;margin-left:260px;padding:1.2rem}
+.add-area-input{display:flex;gap:.4rem;margin-top:.4rem}
+.area-list{max-height:100px;overflow-y:auto;border:1.5px solid var(--border);border-radius:10px;padding:.3rem;margin-top:.3rem}
+
+/* SIDEBAR OVERLAY for mobile */
+.sidebar-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:799}
+.sidebar-overlay.active{display:block}
+.filter-toggle-btn{
+  display:none;position:fixed;bottom:20px;right:20px;
+  width:52px;height:52px;border-radius:50%;background:var(--primary);
+  color:#000;border:none;font-size:20px;cursor:pointer;z-index:798;
+  box-shadow:0 4px 16px rgba(201,162,39,.4);align-items:center;justify-content:center
+}
+
+/* ===== PROPERTIES ===== */
+.properties-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;flex-wrap:wrap;gap:.8rem}
+.properties-header h2{color:var(--primary);display:flex;align-items:center;gap:.5rem;font-size:1.1rem}
+.properties-grid{display:grid;grid-template-columns:1fr;gap:1.2rem}
+@media(min-width:1200px){.properties-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ===== PROPERTY CARD ===== */
+.property-card{width:100%;background:#fff;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.12);padding:16px;transition:all .3s;border:1px solid rgba(201,162,39,.2);position:relative;cursor:pointer}
+.property-card:hover{transform:translateY(-3px);box-shadow:0 16px 36px rgba(201,162,39,.18);border-color:var(--primary)}
+.card-header{text-align:center;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid #eee}
+.card-header h1{color:#1a2a45;font-size:18px;font-weight:700}
+.card-header p{color:var(--primary);font-size:13px;font-weight:500;margin-top:2px}
+
+/* 3x2 IMAGE GRID */
+.img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:14px}
+.img{position:relative;overflow:hidden;border-radius:10px;aspect-ratio:4/3;width:100%}
+.img img{width:100%;height:100%;object-fit:cover;transition:transform .3s;display:block;position:absolute;top:0;left:0}
+.img:hover img{transform:scale(1.05)}
+.label{position:absolute;bottom:5px;left:7px;color:#000;font-size:9px;font-weight:500;background:rgba(255,255,255,.92);padding:2px 7px;border-radius:20px;white-space:nowrap;max-width:calc(100% - 14px);overflow:hidden;text-overflow:ellipsis}
+.img-dl-btn{position:absolute;bottom:26px;right:3px;background:rgba(201,162,39,.92);color:#000;border:none;border-radius:6px;padding:2px 6px;font-size:9px;font-weight:700;cursor:pointer;display:none;align-items:center;gap:2px;z-index:10;transition:all .2s}
+.img:hover .img-dl-btn{display:flex}
+
+.subarea-link{color:var(--primary);cursor:pointer;text-decoration:underline;font-weight:600;transition:color .2s}
+.price-row{display:flex;align-items:center;gap:10px;margin:12px 0;flex-wrap:wrap}
+.price{background:#0c3554;color:#fff;padding:7px 16px;border-radius:40px;font-size:12px;font-weight:600;letter-spacing:.5px}
+.title{font-size:17px;color:#1a2a45;font-weight:600;line-height:1.2;flex:1}
+.location-info{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;padding:7px 10px;background:#f8f9fa;border-radius:10px;border-left:3px solid var(--primary)}
+.location-item{font-size:11px;color:#333;display:flex;align-items:center;gap:4px}
+.location-item i{color:var(--primary)}
+.location-item strong{color:#0c3554}
+
+.property-features{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.feature-item{background:#f0f4ff;border-radius:20px;padding:5px 10px;font-size:11px;color:#333;display:flex;align-items:center;gap:4px;font-weight:500}
+.feature-item i{color:var(--primary)}
+
+.nearest-places-section{margin-bottom:12px;padding:10px;background:#f8f9fa;border-radius:10px;border-left:3px solid #10b981}
+.nearest-places-title{font-size:11px;font-weight:700;color:#333;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.nearest-places-title i{color:#10b981}
+.nearest-places-list{display:flex;flex-wrap:wrap;gap:5px}
+.nearest-place-chip{display:flex;align-items:center;gap:4px;background:#fff;border:1px solid #ddd;border-radius:20px;padding:3px 9px;font-size:10px;color:#333;cursor:pointer;transition:all .2s}
+.nearest-place-chip:hover{border-color:#10b981;color:#10b981}
+.nearest-place-chip i{color:#10b981;font-size:9px}
+.nearest-place-chip small{color:#aaa;font-size:9px}
+
+.features{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+.feature{background:#f3f4f6;padding:6px 8px;border-radius:30px;font-size:10px;display:flex;align-items:center;gap:4px;color:#333;font-weight:500}
+.feature i{color:var(--primary);font-size:12px}
+.contact{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-top:10px;padding-top:10px;border-top:2px solid #eee}
+.numbers{font-size:12px;color:#333;display:flex;flex-direction:column;gap:3px}
+.numbers div{display:flex;align-items:center;gap:5px;cursor:pointer;transition:color .3s;padding:3px 5px;border-radius:8px}
+.numbers div:hover{background:#f0f0f0}
+.numbers i{color:var(--primary);width:14px;font-size:12px}
+.btns{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.btn{padding:7px 13px;border:none;border-radius:40px;color:#fff;font-size:11px;font-weight:600;cursor:pointer;transition:all .3s;display:inline-flex;align-items:center;gap:4px;height:32px;white-space:nowrap}
+.btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.video-btn{background:linear-gradient(135deg,#e1306c,#c13584)}
+.download-btn{background:#0c3554}
+.share-btn{background:linear-gradient(135deg,#c9a227,#b48a1a);color:#000}
+.edit-btn{background:linear-gradient(135deg,#3b82f6,#2563eb);color:white;padding:7px 13px;border:none;border-radius:40px;cursor:pointer;font-size:11px;font-weight:600;transition:all .3s;display:inline-flex;align-items:center;gap:4px;height:32px}
+.admin-actions{display:flex;gap:5px;margin-top:7px;width:100%;justify-content:flex-end;flex-wrap:wrap;align-items:center}
+.approve-btn,.delete-btn,.status-btn{padding:7px 12px;border:none;border-radius:40px;cursor:pointer;font-size:11px;font-weight:600;transition:all .3s;display:inline-flex;align-items:center;gap:4px;height:32px}
+.approve-btn{background:#10b981;color:white}
+.delete-btn{background:#ef4444;color:white}
+.status-btn{background:var(--primary);color:#000}
+
+/* ===== IMAGE LIGHTBOX ===== */
+.img-lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.97);z-index:3000;flex-direction:column;align-items:center;justify-content:center;padding:16px}
+.img-lightbox.active{display:flex}
+.lb-close{position:absolute;top:14px;right:14px;width:38px;height:38px;background:rgba(255,255,255,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:18px;border:none}
+.lb-close:hover{background:var(--danger)}
+.lb-main-wrap{position:relative;width:100%;max-width:820px;display:flex;align-items:center;gap:10px}
+.lb-arrow{width:40px;height:40px;background:rgba(255,255,255,.1);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:16px;flex-shrink:0}
+.lb-arrow:hover{background:rgba(201,162,39,.5)}
+.lb-main-img-box{flex:1;aspect-ratio:16/9;background:#111;border-radius:16px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.lb-main-img-box img{width:100%;height:100%;object-fit:contain}
+.lb-counter{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);color:#fff;font-size:11px;padding:3px 12px;border-radius:20px;font-weight:600}
+.lb-thumbs{display:flex;gap:6px;margin-top:12px;max-width:820px;overflow-x:auto;padding-bottom:4px}
+.lb-thumb{width:64px;height:46px;border-radius:8px;overflow:hidden;cursor:pointer;opacity:.5;flex-shrink:0;border:2px solid transparent;transition:all .2s}
+.lb-thumb:hover,.lb-thumb.active{opacity:1;border-color:var(--primary)}
+.lb-thumb img{width:100%;height:100%;object-fit:cover}
+.lb-actions{display:flex;gap:8px;margin-top:12px}
+.lb-btn{display:flex;align-items:center;gap:5px;padding:8px 18px;border-radius:30px;font-size:12px;font-weight:600;cursor:pointer;border:none}
+.lb-btn.dl-img{background:var(--primary);color:#000}
+.lb-btn.dl-pdf{background:#0c3554;color:#fff}
+
+/* ===== MAP MODAL ===== */
+.map-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:4000;justify-content:center;align-items:center;padding:16px}
+.map-modal.active{display:flex}
+.map-modal-content{background:#fff;border-radius:20px;width:100%;max-width:660px;overflow:hidden}
+.map-modal-header{background:#1a2a45;padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
+.map-modal-header h3{color:var(--primary);font-size:14px;font-weight:700;display:flex;align-items:center;gap:7px}
+.map-modal-close{background:rgba(255,255,255,.1);border:none;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px}
+.map-modal-close:hover{background:var(--danger)}
+.map-iframe-wrap{width:100%;height:380px}
+.map-iframe-wrap iframe{width:100%;height:100%;border:none}
+
+/* ===== VIDEO MODAL ===== */
+.video-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);z-index:3000;justify-content:center;align-items:center;padding:16px}
+.video-modal.active{display:flex}
+.video-content{background:#fff;border-radius:20px;max-width:780px;width:100%;padding:18px;position:relative}
+.video-close{position:absolute;top:-14px;right:-14px;width:36px;height:36px;background:var(--danger);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:white;font-size:18px;z-index:1}
+.video-wrapper{width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden}
+.video-wrapper iframe,.video-wrapper video{width:100%;height:100%;border:none}
+.video-input-group{display:flex;gap:8px;margin-top:12px}
+.video-input-group input{flex:1;padding:10px;border:2px solid #ddd;border-radius:10px;font-size:13px;font-family:'Poppins',sans-serif}
+.video-input-group button{padding:10px 16px;background:var(--primary);border:none;border-radius:10px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif}
+
+/* ===== EDIT MODAL ===== */
+.edit-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:2000;justify-content:center;align-items:center;padding:16px}
+.edit-modal.active{display:flex}
+.edit-modal-content{background:white;border-radius:20px;max-width:580px;width:100%;max-height:90vh;overflow-y:auto;padding:24px;position:relative}
+.edit-modal-close{position:absolute;top:12px;right:12px;width:28px;height:28px;background:#f0f0f0;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.edit-form-group{margin-bottom:12px}
+.edit-form-group label{display:block;margin-bottom:4px;color:#333;font-weight:500;font-size:.9rem}
+.edit-form-group input,.edit-form-group select,.edit-form-group textarea{width:100%;padding:9px;border:2px solid #ddd;border-radius:10px;font-family:'Poppins',sans-serif;font-size:.9rem}
+.save-edit-btn{width:100%;padding:11px;background:var(--primary);color:#000;border:none;border-radius:10px;font-weight:600;cursor:pointer;margin-top:16px;font-family:'Poppins',sans-serif}
+
+/* ===== TIMER MODAL ===== */
+.timer-edit-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:3000;justify-content:center;align-items:center;padding:16px}
+.timer-edit-modal.active{display:flex}
+.timer-edit-content{background:#1a2a45;border-radius:20px;max-width:480px;width:100%;padding:26px;border:2px solid var(--primary);position:relative}
+.timer-edit-content h2{color:var(--primary);margin-bottom:18px;text-align:center;font-size:16px}
+.timer-field{margin-bottom:12px}
+.timer-field label{display:block;margin-bottom:5px;color:#fff;font-size:12px}
+.timer-field input,.timer-field select{width:100%;padding:9px;border:2px solid var(--border);border-radius:10px;background:#0b1423;color:#fff;font-size:13px;font-family:'Poppins',sans-serif}
+.timer-save-btn{width:100%;padding:11px;background:var(--primary);color:#000;border:none;border-radius:10px;font-weight:700;cursor:pointer;margin-top:8px;font-family:'Poppins',sans-serif}
+.timer-close-btn{position:absolute;top:13px;right:13px;background:transparent;border:none;color:#fff;font-size:18px;cursor:pointer}
+
+/* ===== SHARE MODAL ===== */
+.share-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:5000;align-items:flex-end;justify-content:center}
+.share-modal.active{display:flex}
+.share-sheet{background:#fff;border-radius:24px 24px 0 0;padding:20px;width:100%;max-width:560px;max-height:85vh;overflow-y:auto}
+.share-handle{width:40px;height:4px;background:#ddd;border-radius:2px;margin:0 auto 16px}
+.share-sheet h3{font-size:16px;font-weight:700;color:#1a2a45;margin-bottom:12px}
+.share-prop-name{color:#888;font-size:13px;margin-bottom:14px}
+.share-pdf-row{display:flex;align-items:center;gap:12px;padding:12px;background:#f8f9fa;border-radius:14px;margin-bottom:14px}
+.share-pdf-info{display:flex;align-items:center;gap:10px;flex:1}
+.share-pdf-icon{width:36px;height:36px;background:#ef4444;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
+.share-pdf-text{font-weight:600;font-size:13px;color:#333}
+.share-pdf-sub{font-size:11px;color:#888;margin-top:2px}
+.share-pdf-btn{background:var(--primary);color:#000;border:none;padding:8px 14px;border-radius:10px;font-weight:600;font-size:12px;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.share-divider{border:none;border-top:1.5px solid #eee;margin:12px 0}
+.share-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.share-icon-btn{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;padding:8px;border-radius:12px;transition:background .2s;border:none;background:transparent}
+.share-icon-btn:hover{background:#f0f0f0}
+.share-icon-btn .icon-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px}
+.share-icon-btn span{font-size:10px;color:#555;font-weight:500}
+.share-close-btn{width:100%;padding:12px;border:1.5px solid #ddd;border-radius:12px;background:#fff;color:#333;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif}
+
+/* ===== SCREENSHOT PREVIEW ===== */
+.screenshot-preview{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:6000;background:rgba(0,0,0,.9);border-radius:16px;padding:12px;max-width:90vw;max-height:90vh}
+.screenshot-preview.active{display:block}
+.screenshot-image{max-width:100%;max-height:80vh;border-radius:10px;display:block}
+
+/* ===== NO RESULTS ===== */
+.no-results{text-align:center;padding:60px 20px;color:var(--text-muted)}
+.no-results i{font-size:3rem;margin-bottom:16px;display:block;color:var(--border)}
+.no-results h3{font-size:1.2rem;margin-bottom:8px;color:var(--text-secondary)}
+.no-results p{font-size:.9rem}
+
+/* ===== UPLOAD FORM ===== */
+.upload-form{background:var(--bg-secondary);border-radius:20px;padding:24px;border:2px solid var(--border)}
+.upload-form h2{color:var(--primary);margin-bottom:20px;display:flex;align-items:center;gap:.5rem}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full-width{grid-column:1/-1}
+.form-group label{color:var(--text-secondary);font-size:.9rem;font-weight:500}
+.form-group input,.form-group select,.form-group textarea{padding:.75rem;background:var(--bg-card);border:2px solid var(--border);border-radius:10px;color:#333;font-size:.9rem;font-family:'Poppins',sans-serif}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--primary)}
+.form-group textarea{resize:vertical;min-height:80px}
+.section-divider{border:none;border-top:2px solid var(--border);margin:20px 0}
+.section-heading{color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:.5rem;grid-column:1/-1}
+.amenities-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.image-upload-section,.video-upload-section{grid-column:1/-1;background:rgba(255,255,255,.04);border-radius:16px;padding:20px;border:2px solid var(--border)}
+.image-upload-section h3,.video-upload-section h3{color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:.5rem}
+.image-slots-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.image-slot{display:flex;flex-direction:column;gap:6px}
+.image-slot-preview{aspect-ratio:4/3;border-radius:12px;border:2px dashed var(--border);cursor:pointer;position:relative;overflow:hidden;transition:border-color .3s}
+.image-slot-preview:hover{border-color:var(--primary)}
+.slot-num{position:absolute;top:6px;left:8px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;z-index:1}
+.image-slot-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--text-muted);font-size:11px}
+.image-slot-placeholder i{font-size:1.6rem;color:var(--border)}
+.image-slot-preview img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+.image-slot-preview input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2}
+.slot-remove{position:absolute;top:5px;right:5px;width:22px;height:22px;border-radius:50%;background:var(--danger);color:#fff;border:none;cursor:pointer;font-size:10px;display:none;z-index:3;align-items:center;justify-content:center}
+.image-slot-bottom{display:flex;flex-direction:column;gap:3px}
+.image-slot-bottom label{font-size:10px;color:var(--text-muted)}
+.slot-label-input{padding:5px 8px;background:var(--bg-card);border:1.5px solid var(--border);border-radius:8px;color:#333;font-size:11px;font-family:'Poppins',sans-serif}
+.submit-property-btn{width:100%;padding:14px;background:var(--primary);color:#000;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .3s;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:.5rem}
+.submit-property-btn:hover{background:var(--primary-dark);transform:translateY(-2px)}
+.video-tabs{display:flex;gap:8px;margin-bottom:12px}
+.video-tab-btn{padding:7px 16px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--text-muted);font-size:12px;cursor:pointer;font-family:'Poppins',sans-serif;transition:all .2s}
+.video-tab-btn.active{background:var(--primary);color:#000;border-color:var(--primary)}
+.video-tab-content{display:none}
+.video-tab-content.active{display:block}
+.video-url-input-wrap{display:flex;flex-direction:column;gap:8px}
+.video-url-input-wrap input{padding:.7rem;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:'Poppins',sans-serif}
+.video-preview-btn{align-self:flex-start;padding:8px 16px;background:var(--primary);color:#000;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:.85rem;display:flex;align-items:center;gap:.4rem}
+.video-url-preview{border-radius:12px;overflow:hidden;background:#000;aspect-ratio:16/9;margin-top:6px}
+.video-url-preview iframe{width:100%;height:100%;border:none}
+.video-file-upload{border:2px dashed var(--border);border-radius:12px;padding:28px;text-align:center;cursor:pointer;transition:border-color .3s;position:relative}
+.video-file-upload:hover{border-color:var(--primary)}
+.video-file-upload-label{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text-muted);cursor:pointer}
+.video-file-upload-label i{font-size:2.4rem;color:var(--border)}
+.video-file-upload-label span{font-size:.95rem;font-weight:500}
+.video-file-upload-label small{font-size:.8rem;color:var(--text-muted)}
+.video-file-upload input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.video-file-selected{display:none;align-items:center;gap:8px;padding:10px;background:rgba(201,162,39,.1);border-radius:10px;border:1.5px solid rgba(201,162,39,.3);margin-top:8px}
+.video-remove-btn{background:var(--danger);color:#fff;border:none;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;margin-left:auto}
+
+/* ===== CHANGE CREDS MODAL ===== */
+#changeCredsModal,.change-creds-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:2000;justify-content:center;align-items:center;padding:16px}
+#changeCredsModal.active,.change-creds-modal.active{display:flex}
+
+/* ===== ROLE INDICATOR (nav tag) ===== */
+.role-indicator{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700}
+
+/* ===== LOAD MORE ===== */
+.load-more-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;max-width:300px;margin:20px auto;padding:12px;background:var(--primary);color:#000;border:none;border-radius:40px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;font-size:.9rem}
+.load-more-btn:hover{background:var(--primary-dark);transform:translateY(-2px)}
+
+/* ===== NEAREST PLACES ADMIN PANEL ===== */
+.nearest-place-item{display:flex;flex-direction:column;gap:4px;padding:10px;background:rgba(255,255,255,.06);border-radius:10px;border:1px solid var(--border);margin-bottom:6px}
+.np-header{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.np-header i{color:var(--primary);font-size:13px}
+.np-header strong{color:#fff;font-size:12px}
+.np-category{background:rgba(201,162,39,.2);padding:1px 7px;border-radius:12px;font-size:9px;color:var(--primary)}
+.np-remove{background:var(--danger);color:#fff;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:9px;display:inline-flex;align-items:center;justify-content:center;margin-left:auto}
+.np-map-link{display:inline-flex;align-items:center;gap:3px;font-size:10px;color:#4285f4;text-decoration:none;margin-top:4px}
+.np-empty{color:var(--text-muted);font-size:11px;padding:14px;text-align:center}
+.add-nearest-place-form{margin-top:14px;padding-top:10px;border-top:1px solid var(--border)}
+.add-nearest-place-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.add-nearest-place-form input,.add-nearest-place-form select{width:100%;padding:7px 10px;background:#fff;border:2px solid var(--border);border-radius:10px;color:#333;font-size:12px}
+.btn-add-place{width:100%;padding:9px;background:var(--primary);border:none;border-radius:10px;color:#000;font-weight:700;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;gap:7px}
+
+/* ===== BELL & OTHER ANIMATIONS ===== */
+@keyframes bellShake{0%,100%{transform:rotate(0)}20%{transform:rotate(-15deg)}40%{transform:rotate(15deg)}60%{transform:rotate(-10deg)}80%{transform:rotate(10deg)}}
+.bell-shake{animation:bellShake .6s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ===================================================
+   MOBILE RESPONSIVE STYLES  ← KEY SECTION
+=================================================== */
+@media(max-width:768px){
+  /* NAVBAR */
+  .navbar{padding:.6rem 1rem;top:0}
+  .logo-text{font-size:15px}
+  .logo-text span{font-size:10px}
+  .logo-img{width:36px;height:36px}
+
+  /* Hide desktop nav links, show hamburger */
+  .nav-right .nav-links{display:none}
+  .nav-hamburger{display:flex}
+
+  /* SUB NAVBAR */
+  .sub-navbar{
+    top:60px;padding:5px 10px;min-height:auto;gap:6px;flex-wrap:nowrap
+  }
+  .sub-navbar .sub-search-wrap{max-width:100%;padding:5px 10px}
+  .sub-notif-strip{display:none}  /* hide on mobile, too cramped */
+  .sub-notif-actions{display:none}
+
+  /* MAIN LAYOUT */
+  .main-container{margin-top:108px;flex-direction:column}
+
+  /* SIDEBAR — hide by default on mobile, slide in */
+  .filters-sidebar{
+    transform:translateX(-110%);width:min(300px,88vw);z-index:900;
+    top:0;height:100vh;padding-top:80px
+  }
+  .filters-sidebar.mobile-open{transform:translateX(0)}
+  .filter-toggle-btn{display:flex}
+
+  /* CONTENT — full width */
+  .content-area{margin-left:0;padding:.8rem}
+
+  /* PROPERTY CARD */
+  .property-card{padding:12px}
+  .card-header h1{font-size:15px}
+  .title{font-size:14px}
+  .features{grid-template-columns:repeat(3,1fr)}
+  .contact{flex-direction:column;align-items:flex-start}
+  .btns{flex-wrap:wrap}
+  .numbers{font-size:11px}
+
+  /* IMAGE GRID */
+  .img-grid{grid-template-columns:repeat(3,1fr);gap:4px}
+  .label{font-size:8px;padding:2px 5px}
+
+  /* UPLOAD FORM */
+  .form-grid{grid-template-columns:1fr}
+  .image-slots-grid{grid-template-columns:repeat(2,1fr)}
+  .amenities-grid{grid-template-columns:1fr 1fr}
+
+  /* MODALS */
+  .lb-main-wrap{gap:6px}
+  .lb-arrow{width:34px;height:34px;font-size:14px}
+  .share-grid{grid-template-columns:repeat(4,1fr)}
+
+  /* LOGIN */
+  .login-container{padding:22px 18px}
+
+  /* ROLE SELECTOR */
+  .role-selector-box{padding:28px 20px}
+}
+
+@media(max-width:480px){
+  .logo-text{display:none}
+  .navbar{padding:.55rem .8rem}
+  .sub-navbar{top:56px}
+  .main-container{margin-top:104px}
+  .properties-grid{grid-template-columns:1fr}
+  .features{grid-template-columns:repeat(2,1fr)}
+  .image-slots-grid{grid-template-columns:repeat(2,1fr)}
+  .share-grid{grid-template-columns:repeat(3,1fr)}
+  .btns .btn{font-size:10px;padding:6px 10px;height:28px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     ROLE SELECTOR PAGE
+============================================================ -->
+<div id="roleSelectorPage" class="role-selector-page">
+  <div class="role-selector-box">
+    <img src="image-removebg-preview.png" alt="UAE Properties Logo" class="role-selector-logo" onerror="this.style.display='none'">
+    <h1>UAE Properties</h1>
+    <p>Please select your dashboard to continue</p>
+    <div class="role-cards">
+      <div class="role-card admin-card" onclick="selectRole('admin')">
+        <div class="role-card-icon"><i class="fas fa-shield-alt"></i></div>
+        <div class="role-card-text">
+          <h3>Admin Dashboard</h3>
+          <p>Full access · manage properties & users</p>
+        </div>
+        <i class="fas fa-chevron-right role-card-arrow"></i>
+      </div>
+      <div class="role-card user-card" onclick="selectRole('user')">
+        <div class="role-card-icon"><i class="fas fa-user"></i></div>
+        <div class="role-card-text">
+          <h3>User Dashboard</h3>
+          <p>Browse & upload properties</p>
+        </div>
+        <i class="fas fa-chevron-right role-card-arrow"></i>
+      </div>
+      <div class="role-card marketing-card" onclick="selectRole('marketing')">
+        <div class="role-card-icon"><i class="fas fa-chart-line"></i></div>
+        <div class="role-card-text">
+          <h3>Marketing Dashboard</h3>
+          <p>View & share approved properties</p>
+        </div>
+        <i class="fas fa-chevron-right role-card-arrow"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     TOAST
+============================================================ -->
+<div id="notificationToast" class="notification-toast">
+  <i class="fas fa-bell"></i>
+  <span id="toastMessage">Done!</span>
+  <span onclick="hideToast()" style="cursor:pointer;margin-left:4px"><i class="fas fa-times"></i></span>
+</div>
+
+<!-- ============================================================
+     SHARED MODALS
+============================================================ -->
+<!-- Video Modal -->
+<div id="videoModal" class="video-modal">
+  <div class="video-content">
+    <div class="video-close" onclick="closeVideoModal()"><i class="fas fa-times"></i></div>
+    <div class="video-wrapper" id="videoWrapper"></div>
+    <div class="video-input-group">
+      <input type="text" id="videoUrlInput" placeholder="Enter YouTube/Video URL...">
+      <button onclick="updateVideo()">Load</button>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div id="imgLightbox" class="img-lightbox">
+  <button class="lb-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
+  <div class="lb-main-wrap">
+    <button class="lb-arrow" onclick="lbPrev()"><i class="fas fa-chevron-left"></i></button>
+    <div class="lb-main-img-box"><img id="lbMainImg" src="" alt="Property"><div class="lb-counter" id="lbCounter">1 / 6</div></div>
+    <button class="lb-arrow" onclick="lbNext()"><i class="fas fa-chevron-right"></i></button>
+  </div>
+  <div class="lb-thumbs" id="lbThumbs"></div>
+  <div class="lb-actions">
+    <button class="lb-btn dl-img" onclick="lbDownloadCurrent()"><i class="fas fa-image"></i> Download Image</button>
+    <button class="lb-btn dl-pdf" onclick="lbDownloadPDF()"><i class="fas fa-file-pdf"></i> Download PDF</button>
+  </div>
+</div>
+
+<!-- Map Modal -->
+<div id="mapModal" class="map-modal">
+  <div class="map-modal-content">
+    <div class="map-modal-header">
+      <h3><i class="fas fa-map-marker-alt"></i> <span id="mapModalTitle">Location</span></h3>
+      <button class="map-modal-close" onclick="closeMapModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="map-iframe-wrap"><iframe id="mapIframe" src="" allowfullscreen loading="lazy"></iframe></div>
+  </div>
+</div>
+
+<!-- Share Modal -->
+<div class="share-modal" id="shareModal" onclick="if(event.target===this)closeShareModal()">
+  <div class="share-sheet">
+    <div class="share-handle"></div>
+    <h3><i class="fas fa-share-alt" style="color:#c9a227;margin-right:6px"></i> Share Property</h3>
+    <div class="share-prop-name" id="sharePropName">Property</div>
+    <div class="share-pdf-row">
+      <div class="share-pdf-info">
+        <div class="share-pdf-icon"><i class="fas fa-file-pdf"></i></div>
+        <div><div class="share-pdf-text">Property Images PDF</div><div class="share-pdf-sub" id="sharePdfStatus">All images in one PDF</div></div>
+      </div>
+      <button class="share-pdf-btn" id="sharePdfBtn" onclick="shareDownloadPDF()"><i class="fas fa-download"></i> Download</button>
+    </div>
+    <hr class="share-divider">
+    <div class="share-grid" id="shareGrid"></div>
+    <button class="share-close-btn" onclick="closeShareModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- Screenshot Preview -->
+<div id="screenshotPreview" class="screenshot-preview" onclick="this.classList.remove('active')">
+  <img src="" alt="Screenshot" class="screenshot-image" id="screenshotImage">
+</div>
+
+<!-- ============================================================
+     ADMIN LOGIN + DASHBOARD
+============================================================ -->
+<div id="adminSection" style="display:none">
+  <!-- Change Creds Modal -->
+  <div id="changeCredsModal" class="edit-modal" onclick="if(event.target===this)closeChangeCredentials()">
+    <div class="edit-modal-content" style="max-width:420px">
+      <div class="edit-modal-close" onclick="closeChangeCredentials()"><i class="fas fa-times"></i></div>
+      <h2 style="color:var(--primary);margin-bottom:6px;font-size:17px"><i class="fas fa-shield-alt"></i> Change Admin Credentials</h2>
+      <p style="color:#888;font-size:12px;margin-bottom:18px">Update your admin username and password.</p>
+      <div class="edit-form-group"><label>New Username</label><input type="text" id="newUsername" placeholder="Enter new username" autocomplete="off"></div>
+      <div class="edit-form-group"><label>New Password</label><input type="password" id="newPassword" placeholder="Minimum 8 characters" autocomplete="new-password"></div>
+      <div class="edit-form-group"><label>Confirm Password</label><input type="password" id="confirmPassword" placeholder="Repeat new password" autocomplete="new-password"></div>
+      <button class="save-edit-btn" onclick="saveNewCredentials()"><i class="fas fa-save"></i> Save New Credentials</button>
+    </div>
+  </div>
+  <!-- Edit Modal -->
+  <div id="editModal" class="edit-modal">
+    <div class="edit-modal-content">
+      <div class="edit-modal-close" onclick="closeEditModal()"><i class="fas fa-times"></i></div>
+      <h2 style="color:var(--primary);margin-bottom:18px">Edit Property</h2>
+      <div id="editFormContent"></div>
+    </div>
+  </div>
+  <!-- Timer Modal -->
+  <div id="timerEditModal" class="timer-edit-modal">
+    <div class="timer-edit-content">
+      <button class="timer-close-btn" onclick="closeTimerModal()"><i class="fas fa-times"></i></button>
+      <h2><i class="fas fa-calendar-alt"></i> Update Date & Available</h2>
+      <input type="hidden" id="timerPropertyId">
+      <div class="timer-field"><label><i class="fas fa-calendar-alt"></i> Available From Date & Time</label><input type="datetime-local" id="timerAvailableDate"></div>
+      <button class="timer-save-btn" onclick="saveTimerUpdate()"><i class="fas fa-save"></i> Save & Update Cards</button>
+    </div>
+  </div>
+  <!-- Login -->
+  <div class="login-page" id="adminLoginPage">
+    <div class="login-container">
+      <div class="header-brand">
+        <img src="image-removebg-preview.png" alt="" class="header-logo" onerror="this.style.display='none'">
+        <h1>UAE Properties</h1><p class="subtitle">Admin Dashboard</p>
+      </div>
+      <div style="text-align:center;margin-bottom:16px"><span class="role-badge admin"><i class="fas fa-shield-alt"></i> Admin Access</span></div>
+      <div class="login-form">
+        <div class="form-group"><label style="color:#000">Username</label><input type="text" id="adminUsername" placeholder="Admin username" autocomplete="off"></div>
+        <div class="form-group"><label style="color:#000">Password</label><input type="password" id="adminPassword" placeholder="Admin password" autocomplete="off"></div>
+        <button class="login-btn" onclick="handleAdminLogin()">Login as Admin</button>
+      </div>
+      <div style="text-align:center;margin-top:12px">
+        <button class="back-to-roles" onclick="backToRoles()"><i class="fas fa-arrow-left"></i> Back to Role Selection</button>
+      </div>
+    </div>
+  </div>
+  <!-- Dashboard -->
+  <div class="dashboard" id="adminDashboard">
+    <nav class="navbar">
+      <div class="logo-box">
+        <img src="image-removebg-preview.png" alt="" class="logo-img" onerror="this.style.display='none'">
+        <div class="logo-text">UAE Properties<span>Admin Panel</span></div>
+      </div>
+      <!-- Desktop nav -->
+      <div class="nav-right">
+        <div class="nav-links">
+          <span class="nav-link active" onclick="showSection('properties',this)">Properties</span>
+          <span class="role-indicator" style="background:rgba(239,68,68,.15);border:1.5px solid #ef4444;color:#ef4444;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px">Admin</span>
+          <div class="user-info">
+            <div class="user-avatar" id="adminUserAvatar">A</div>
+            <div class="user-details">
+              <div class="user-name" id="adminDisplayName">Admin</div>
+              <div class="user-type">Administrator</div>
+            </div>
+          </div>
+          <button class="logout-btn" style="border-color:var(--primary);color:var(--primary)" onclick="openChangeCredentials()" title="Change Credentials"><i class="fas fa-key"></i></button>
+          <button class="logout-btn" onclick="adminLogout()">Logout</button>
+        </div>
+      </div>
+      <!-- Hamburger -->
+      <button class="nav-hamburger" id="adminHamburger" onclick="toggleMobileNav('admin')">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <!-- Mobile drawer -->
+    <div class="mobile-nav-drawer" id="adminMobileDrawer" onclick="closeMobileDrawer('admin')">
+      <div class="mobile-drawer-content" onclick="event.stopPropagation()">
+        <div class="drawer-user-card">
+          <div class="drawer-user-avatar" style="background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff">A</div>
+          <div><div class="drawer-user-name">Admin</div><div class="drawer-user-type">Administrator</div></div>
+        </div>
+        <div class="drawer-link active" onclick="showSection('properties',null);closeMobileDrawer('admin')"><i class="fas fa-building"></i> Properties</div>
+        <hr class="drawer-divider">
+        <div class="drawer-key-btn" onclick="openChangeCredentials();closeMobileDrawer('admin')"><i class="fas fa-key"></i> Change Credentials</div>
+        <div class="drawer-logout" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Logout</div>
+      </div>
+    </div>
+    <!-- Sub Navbar -->
+    <div class="sub-navbar" id="adminSubNavbar">
+      <div class="sub-search-wrap" id="navSearchWrap">
+        <i class="fas fa-search"></i>
+        <input type="text" id="navSearchInput" placeholder="Search by title, area, code...">
+        <button class="search-clear" onclick="clearSearch()"><i class="fas fa-times"></i></button>
+        <div class="search-dropdown" id="searchDropdown"></div>
+      </div>
+      <div class="sub-notif-strip">
+        <span class="sub-notif-label"><i class="fas fa-bell"></i> Notifications <span class="sub-notif-count" id="subNotifCount"></span></span>
+        <div class="sub-notif-items" id="subNotifItems" style="display:flex;gap:6px;overflow-x:auto;flex:1;padding:2px 0;scrollbar-width:thin">
+          <span class="sub-notif-empty"><i class="fas fa-bell-slash"></i> No notifications</span>
+        </div>
+      </div>
+      <div class="sub-notif-actions"><button class="sub-notif-mark-all" onclick="markAllRead()">Mark all read</button></div>
+    </div>
+    <div class="notif-bar" id="notifBar"><div class="notif-bar-inner"><div class="notif-bar-list" id="notifBarList"></div></div></div>
+    <div class="main-container">
+      <!-- Sidebar -->
+      <div class="filters-sidebar" id="adminSidebar">
+        <div class="filters-header">
+          <h3><i class="fas fa-filter"></i> Filters</h3>
+          <span class="clear-filters" onclick="clearAllFilters()"><i class="fas fa-times"></i> Clear All</span>
+        </div>
+        <div class="filter-section"><h4><i class="fas fa-city"></i> City</h4><select class="filter-select" id="filterCity" onchange="loadAreas()"><option value="">All Cities</option><option value="Dubai">Dubai</option><option value="Abu Dhabi">Abu Dhabi</option><option value="Sharjah">Sharjah</option><option value="Ajman">Ajman</option><option value="Ras Al Khaimah">Ras Al Khaimah</option><option value="Fujairah">Fujairah</option><option value="Umm Al Quwain">Umm Al Quwain</option></select></div>
+        <div class="filter-section"><h4><i class="fas fa-map-marker-alt"></i> Area</h4><select class="filter-select" id="filterArea" onchange="loadSubAreas()"><option value="">All Areas</option></select><div class="add-area-input"><input type="text" id="newAreaInput" placeholder="Add new area..." style="flex:1;padding:.6rem;background:#fff;border:2px solid var(--border);border-radius:10px;color:#333;font-size:.82rem"><button onclick="addNewArea()" style="padding:.6rem .9rem;background:var(--primary);border:none;border-radius:10px;color:#000;font-weight:600;cursor:pointer"><i class="fas fa-plus"></i></button></div><div class="area-list" id="areaList"></div></div>
+        <div class="filter-section"><h4><i class="fas fa-map-pin"></i> Sub Area</h4><select class="filter-select" id="filterSubArea"><option value="">All Sub Areas</option></select><div class="add-area-input"><input type="text" id="newSubAreaInput" placeholder="Add sub area..." style="flex:1;padding:.6rem;background:#fff;border:2px solid var(--border);border-radius:10px;color:#333;font-size:.82rem"><button onclick="addNewSubArea()" style="padding:.6rem .9rem;background:var(--primary);border:none;border-radius:10px;color:#000;font-weight:600;cursor:pointer"><i class="fas fa-plus"></i></button></div><div class="area-list" id="subAreaList"></div></div>
+        <div class="filter-section"><h4><i class="fas fa-building"></i> Property Type</h4><div class="filter-options" id="propertyTypeFilters"></div></div>
+        <div class="filter-section"><h4><i class="fas fa-money-bill"></i> Price Range (AED)</h4><div class="price-range"><input type="number" id="minPrice" placeholder="Min"><input type="number" id="maxPrice" placeholder="Max"></div></div>
+        <div class="filter-section"><h4><i class="fas fa-home"></i> Property Status</h4><div class="radio-group"><label class="radio-label"><input type="radio" name="propertyStatus" value="" checked> Any</label><label class="radio-label"><input type="radio" name="propertyStatus" value="rent"> For Rent</label><label class="radio-label"><input type="radio" name="propertyStatus" value="sale"> For Sale</label><label class="radio-label"><input type="radio" name="propertyStatus" value="under-construction"> Under Construction</label><label class="radio-label"><input type="radio" name="propertyStatus" value="sold-out"> Sold Out</label></div></div>
+        <div class="filter-section"><h4><i class="fas fa-clock"></i> Rental Duration</h4><div class="radio-group"><label class="radio-label"><input type="radio" name="rentalDuration" value="" checked> Any</label><label class="radio-label"><input type="radio" name="rentalDuration" value="hourly"> Per Hour</label><label class="radio-label"><input type="radio" name="rentalDuration" value="daily"> Per Day</label><label class="radio-label"><input type="radio" name="rentalDuration" value="monthly"> Monthly</label><label class="radio-label"><input type="radio" name="rentalDuration" value="yearly"> Yearly</label></div></div>
+        <div class="filter-section"><h4><i class="fas fa-check-circle"></i> Amenities</h4><div class="filter-options"><label class="filter-checkbox"><input type="checkbox" value="balcony"> Balcony</label><label class="filter-checkbox"><input type="checkbox" value="attachedWashroom"> Attached Washroom</label><label class="filter-checkbox"><input type="checkbox" value="window"> Window</label><label class="filter-checkbox"><input type="checkbox" value="commonWashroom"> Common Washroom</label><label class="filter-checkbox"><input type="checkbox" value="fullClosed"> Full Closed</label></div></div>
+        <button class="apply-filters-btn" onclick="applyFilters()"><i class="fas fa-search"></i> Apply Filters</button>
+      </div>
+      <!-- Sidebar overlay -->
+      <div class="sidebar-overlay" id="adminSidebarOverlay" onclick="closeSidebar('admin')"></div>
+      <!-- Filter toggle btn -->
+      <button class="filter-toggle-btn" id="adminFilterBtn" onclick="toggleSidebar('admin')"><i class="fas fa-sliders-h"></i></button>
+      <!-- Content -->
+      <div class="content-area">
+        <div id="propertiesSection">
+          <div class="properties-header"><h2><i class="fas fa-building"></i> All Properties <span id="propCount" style="font-size:13px;color:var(--text-muted);margin-left:6px"></span></h2></div>
+          <div class="properties-grid" id="propertiesGrid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     USER SECTION
+============================================================ -->
+<div id="userSection" style="display:none">
+  <div class="login-page" id="userLoginPage">
+    <div class="login-container">
+      <div class="header-brand">
+        <img src="image-removebg-preview.png" alt="" class="header-logo" onerror="this.style.display='none'">
+        <h1>UAE Properties</h1><p class="subtitle">User Dashboard</p>
+      </div>
+      <div style="text-align:center;margin-bottom:16px"><span class="role-badge user"><i class="fas fa-user"></i> User Access</span></div>
+      <div class="login-form">
+        <div class="form-group"><label style="color:#000">Username</label><input type="text" id="userUsername" autocomplete="off"></div>
+        <div class="form-group"><label style="color:#000">Password</label><input type="password" id="userPassword" autocomplete="off"></div>
+        <button class="login-btn" onclick="handleUserLogin()">Login as User</button>
+      </div>
+      <div style="text-align:center;margin-top:12px">
+        <button class="back-to-roles" onclick="backToRoles()"><i class="fas fa-arrow-left"></i> Back to Role Selection</button>
+      </div>
+    </div>
+  </div>
+  <div class="dashboard" id="userDashboard">
+    <nav class="navbar">
+      <div class="logo-box">
+        <img src="image-removebg-preview.png" alt="" class="logo-img" onerror="this.style.display='none'">
+        <div class="logo-text">UAE Properties<span>User Panel</span></div>
+      </div>
+      <div class="nav-right">
+        <div class="nav-links">
+          <span class="nav-link active" id="userPropLink" onclick="showUserSection('properties',this)">Properties</span>
+          <span class="nav-link" id="userUploadLink" onclick="showUserSection('upload',this)">Upload Property</span>
+          <span class="role-indicator" style="background:rgba(201,162,39,.15);border:1.5px solid var(--primary);color:var(--primary);font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px">User</span>
+          <div class="user-info">
+            <div class="user-avatar" id="userUserAvatar" style="background:linear-gradient(135deg,var(--primary),#ffd700)">U</div>
+            <div class="user-details">
+              <div class="user-name" id="userDisplayName">User</div>
+              <div class="user-type" style="color:var(--primary)">Property User</div>
+            </div>
+          </div>
+          <button class="logout-btn" onclick="userLogout()">Logout</button>
+        </div>
+      </div>
+      <button class="nav-hamburger" id="userHamburger" onclick="toggleMobileNav('user')">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <!-- Mobile drawer -->
+    <div class="mobile-nav-drawer" id="userMobileDrawer" onclick="closeMobileDrawer('user')">
+      <div class="mobile-drawer-content" onclick="event.stopPropagation()">
+        <div class="drawer-user-card">
+          <div class="drawer-user-avatar" style="background:linear-gradient(135deg,var(--primary),#ffd700);color:#000">U</div>
+          <div><div class="drawer-user-name" id="userDrawerName">User</div><div class="drawer-user-type">Property User</div></div>
+        </div>
+        <div class="drawer-link active" onclick="showUserSection('properties',null);closeMobileDrawer('user')"><i class="fas fa-building"></i> Properties</div>
+        <div class="drawer-link" onclick="showUserSection('upload',null);closeMobileDrawer('user')"><i class="fas fa-upload"></i> Upload Property</div>
+        <hr class="drawer-divider">
+        <div class="drawer-logout" onclick="userLogout()"><i class="fas fa-sign-out-alt"></i> Logout</div>
+      </div>
+    </div>
+    <!-- Sub Navbar -->
+    <div class="sub-navbar" id="userSubNavbar">
+      <div class="sub-search-wrap" id="navSearchWrapUser">
+        <i class="fas fa-search"></i>
+        <input type="text" id="navSearchInputUser" placeholder="Search properties...">
+        <button class="search-clear" onclick="clearSearchUser()"><i class="fas fa-times"></i></button>
+        <div class="search-dropdown" id="searchDropdownUser"></div>
+      </div>
+      <div class="sub-notif-strip">
+        <span class="sub-notif-label"><i class="fas fa-bell"></i> Notifications <span class="sub-notif-count" id="subNotifCountUser"></span></span>
+        <div class="sub-notif-items" id="subNotifItemsUser"><span class="sub-notif-empty"><i class="fas fa-bell-slash"></i> No notifications</span></div>
+      </div>
+      <div class="sub-notif-actions"><button class="sub-notif-mark-all" onclick="markAllReadUser()">Mark all read</button></div>
+    </div>
+    <div class="main-container">
+      <div class="filters-sidebar" id="userSidebar">
+        <div class="filters-header"><h3><i class="fas fa-filter"></i> Filters</h3><span class="clear-filters" onclick="clearAllFiltersUser()"><i class="fas fa-times"></i> Clear All</span></div>
+        <div class="filter-section"><h4><i class="fas fa-city"></i> City</h4><select class="filter-select" id="filterCityUser" onchange="loadAreasUser()"><option value="">All Cities</option><option value="Dubai">Dubai</option><option value="Abu Dhabi">Abu Dhabi</option><option value="Sharjah">Sharjah</option><option value="Ajman">Ajman</option><option value="Ras Al Khaimah">Ras Al Khaimah</option><option value="Fujairah">Fujairah</option><option value="Umm Al Quwain">Umm Al Quwain</option></select></div>
+        <div class="filter-section"><h4><i class="fas fa-map-marker-alt"></i> Area</h4><select class="filter-select" id="filterAreaUser" onchange="loadSubAreasUser()"><option value="">All Areas</option></select></div>
+        <div class="filter-section"><h4><i class="fas fa-map-pin"></i> Sub Area</h4><select class="filter-select" id="filterSubAreaUser"><option value="">All Sub Areas</option></select></div>
+        <div class="filter-section"><h4><i class="fas fa-building"></i> Property Type</h4><div class="filter-options" id="propertyTypeFiltersUser"></div></div>
+        <div class="filter-section"><h4><i class="fas fa-money-bill"></i> Price Range (AED)</h4><div class="price-range"><input type="number" id="minPriceUser" placeholder="Min"><input type="number" id="maxPriceUser" placeholder="Max"></div></div>
+        <div class="filter-section"><h4><i class="fas fa-home"></i> Property Status</h4><div class="radio-group"><label class="radio-label"><input type="radio" name="propertyStatusUser" value="" checked> Any</label><label class="radio-label"><input type="radio" name="propertyStatusUser" value="rent"> For Rent</label><label class="radio-label"><input type="radio" name="propertyStatusUser" value="sale"> For Sale</label></div></div>
+        <button class="apply-filters-btn" onclick="applyFiltersUser()"><i class="fas fa-search"></i> Apply Filters</button>
+      </div>
+      <div class="sidebar-overlay" id="userSidebarOverlay" onclick="closeSidebar('user')"></div>
+      <button class="filter-toggle-btn" id="userFilterBtn" onclick="toggleSidebar('user')"><i class="fas fa-sliders-h"></i></button>
+      <div class="content-area">
+        <div id="userPropertiesSection">
+          <div class="properties-header"><h2><i class="fas fa-building"></i> Available Properties</h2></div>
+          <div class="properties-grid" id="propertiesGridUser"></div>
+        </div>
+        <div id="userUploadSection" style="display:none">
+          <p style="color:var(--text-muted);text-align:center;padding:40px">Upload form — connect your user.html upload section here.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MARKETING SECTION
+============================================================ -->
+<div id="marketingSection" style="display:none">
+  <div id="mktChangeCredsModal" class="edit-modal" onclick="if(event.target===this)closeMktChangeCredentials()">
+    <div class="edit-modal-content" style="max-width:420px">
+      <div class="edit-modal-close" onclick="closeMktChangeCredentials()"><i class="fas fa-times"></i></div>
+      <h2 style="color:#10b981;margin-bottom:6px;font-size:17px"><i class="fas fa-shield-alt"></i> Change Marketing Credentials</h2>
+      <div class="edit-form-group"><label>New Username</label><input type="text" id="mktNewUsername" autocomplete="off"></div>
+      <div class="edit-form-group"><label>New Password</label><input type="password" id="mktNewPassword" autocomplete="new-password"></div>
+      <div class="edit-form-group"><label>Confirm Password</label><input type="password" id="mktConfirmPassword" autocomplete="new-password"></div>
+      <button class="save-edit-btn" style="background:#10b981" onclick="saveMktCredentials()"><i class="fas fa-save"></i> Save Credentials</button>
+    </div>
+  </div>
+  <div class="login-page" id="marketingLoginPage">
+    <div class="login-container">
+      <div class="header-brand">
+        <img src="image-removebg-preview.png" alt="" class="header-logo" onerror="this.style.display='none'">
+        <h1>UAE Properties</h1><p class="subtitle">Marketing Dashboard</p>
+      </div>
+      <div style="text-align:center;margin-bottom:16px"><span class="role-badge marketing"><i class="fas fa-chart-line"></i> Marketing Access</span></div>
+      <div class="login-form">
+        <div class="form-group"><label style="color:#000">Username</label><input type="text" id="mktUsername" autocomplete="off"></div>
+        <div class="form-group"><label style="color:#000">Password</label><input type="password" id="mktPassword" autocomplete="off"></div>
+        <button class="login-btn" style="background:#10b981" onclick="handleMktLogin()">Login as Marketing</button>
+      </div>
+      <div style="text-align:center;margin-top:12px">
+        <button class="back-to-roles" onclick="backToRoles()"><i class="fas fa-arrow-left"></i> Back to Role Selection</button>
+      </div>
+    </div>
+  </div>
+  <div class="dashboard" id="marketingDashboard">
+    <nav class="navbar">
+      <div class="logo-box">
+        <img src="image-removebg-preview.png" alt="" class="logo-img" onerror="this.style.display='none'">
+        <div class="logo-text">UAE Properties<span>Marketing Panel</span></div>
+      </div>
+      <div class="nav-right">
+        <div class="nav-links">
+          <span class="nav-link active" onclick="showSection('properties',this)">Properties</span>
+          <span class="role-indicator" style="background:rgba(16,185,129,.15);border:1.5px solid #10b981;color:#10b981;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px">Marketing</span>
+          <div class="user-info">
+            <div class="user-avatar" id="mktUserAvatar" style="background:linear-gradient(135deg,#10b981,#059669)">M</div>
+            <div class="user-details">
+              <div class="user-name" id="mktDisplayName">Marketing</div>
+              <div class="user-type" style="color:#10b981">Marketing Team</div>
+            </div>
+          </div>
+          <button class="logout-btn" style="border-color:#10b981;color:#10b981" onclick="openMktChangeCredentials()" title="Change Credentials"><i class="fas fa-key"></i></button>
+          <button class="logout-btn" onclick="mktLogout()">Logout</button>
+        </div>
+      </div>
+      <button class="nav-hamburger" id="mktHamburger" onclick="toggleMobileNav('mkt')">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <!-- Mobile drawer -->
+    <div class="mobile-nav-drawer" id="mktMobileDrawer" onclick="closeMobileDrawer('mkt')">
+      <div class="mobile-drawer-content" onclick="event.stopPropagation()">
+        <div class="drawer-user-card">
+          <div class="drawer-user-avatar" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff">M</div>
+          <div><div class="drawer-user-name">Marketing</div><div class="drawer-user-type">Marketing Team</div></div>
+        </div>
+        <div class="drawer-link active" onclick="closeMobileDrawer('mkt')"><i class="fas fa-building"></i> Properties</div>
+        <hr class="drawer-divider">
+        <div class="drawer-key-btn" onclick="openMktChangeCredentials();closeMobileDrawer('mkt')"><i class="fas fa-key"></i> Change Credentials</div>
+        <div class="drawer-logout" onclick="mktLogout()"><i class="fas fa-sign-out-alt"></i> Logout</div>
+      </div>
+    </div>
+    <!-- Sub Navbar -->
+    <div class="sub-navbar">
+      <div class="sub-search-wrap" id="navSearchWrapMkt">
+        <i class="fas fa-search"></i>
+        <input type="text" id="navSearchInputMkt" placeholder="Search properties...">
+        <button class="search-clear" onclick="clearSearchMkt()"><i class="fas fa-times"></i></button>
+        <div class="search-dropdown" id="searchDropdownMkt"></div>
+      </div>
+      <div class="sub-notif-strip">
+        <span class="sub-notif-label"><i class="fas fa-bell"></i> Notifications <span class="sub-notif-count" id="subNotifCountMkt"></span></span>
+        <div class="sub-notif-items" id="subNotifItemsMkt"><span class="sub-notif-empty"><i class="fas fa-bell-slash"></i> No notifications</span></div>
+      </div>
+      <div class="sub-notif-actions"><button class="sub-notif-mark-all" onclick="markAllReadMkt()">Mark all read</button></div>
+    </div>
+    <div class="main-container">
+      <div class="filters-sidebar" id="mktSidebar">
+        <div class="filters-header"><h3><i class="fas fa-filter"></i> Filters</h3><span class="clear-filters" onclick="clearAllFiltersMkt()"><i class="fas fa-times"></i> Clear All</span></div>
+        <div class="filter-section"><h4><i class="fas fa-city"></i> City</h4><select class="filter-select" id="filterCityMkt" onchange="loadAreasMkt()"><option value="">All Cities</option><option value="Dubai">Dubai</option><option value="Abu Dhabi">Abu Dhabi</option><option value="Sharjah">Sharjah</option><option value="Ajman">Ajman</option><option value="Ras Al Khaimah">Ras Al Khaimah</option><option value="Fujairah">Fujairah</option><option value="Umm Al Quwain">Umm Al Quwain</option></select></div>
+        <div class="filter-section"><h4><i class="fas fa-map-marker-alt"></i> Area</h4><select class="filter-select" id="filterAreaMkt" onchange="loadSubAreasMkt()"><option value="">All Areas</option></select></div>
+        <div class="filter-section"><h4><i class="fas fa-map-pin"></i> Sub Area</h4><select class="filter-select" id="filterSubAreaMkt"><option value="">All Sub Areas</option></select></div>
+        <div class="filter-section"><h4><i class="fas fa-building"></i> Property Type</h4><div class="filter-options" id="propertyTypeFiltersMkt"></div></div>
+        <div class="filter-section"><h4><i class="fas fa-money-bill"></i> Price Range (AED)</h4><div class="price-range"><input type="number" id="minPriceMkt" placeholder="Min"><input type="number" id="maxPriceMkt" placeholder="Max"></div></div>
+        <div class="filter-section"><h4><i class="fas fa-home"></i> Property Status</h4><div class="radio-group"><label class="radio-label"><input type="radio" name="propertyStatusMkt" value="" checked> Any</label><label class="radio-label"><input type="radio" name="propertyStatusMkt" value="rent"> For Rent</label><label class="radio-label"><input type="radio" name="propertyStatusMkt" value="sale"> For Sale</label></div></div>
+        <button class="apply-filters-btn" style="background:#10b981" onclick="applyFiltersMkt()"><i class="fas fa-search"></i> Apply Filters</button>
+      </div>
+      <div class="sidebar-overlay" id="mktSidebarOverlay" onclick="closeSidebar('mkt')"></div>
+      <button class="filter-toggle-btn" id="mktFilterBtn" style="background:#10b981" onclick="toggleSidebar('mkt')"><i class="fas fa-sliders-h"></i></button>
+      <div class="content-area">
+        <div id="mktPropertiesSection">
+          <div class="properties-header"><h2 style="color:#10b981"><i class="fas fa-building"></i> Approved Properties</h2></div>
+          <div class="properties-grid" id="propertiesGridMkt"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SHARED JS
+============================================================ -->
+<script src="shared.js"></script>
+<script src="card.js"></script>
+
+<script>
+// ===== ROLE MANAGEMENT =====
+let activeRole = null;
+window.currentUserType = null;
+let currentUser = null;
+
+function selectRole(role){
+  document.getElementById('roleSelectorPage').style.display='none';
+  activeRole = role;
+  if(role==='admin'){
+    document.getElementById('adminSection').style.display='block';
+    initAdminCreds();
+  } else if(role==='user'){
+    document.getElementById('userSection').style.display='block';
+    initUserCreds();
+  } else if(role==='marketing'){
+    document.getElementById('marketingSection').style.display='block';
+    initMktCreds();
+  }
+}
+
+function backToRoles(){
+  // Hide all sections and show role selector
+  document.getElementById('roleSelectorPage').style.display='flex';
+  ['adminSection','userSection','marketingSection'].forEach(id=>{
+    document.getElementById(id).style.display='none';
+  });
+  // Reset dashboards
+  document.querySelectorAll('.dashboard').forEach(d=>d.classList.remove('active'));
+  document.querySelectorAll('.login-page').forEach(l=>l.style.display='flex');
+  activeRole=null; currentUser=null; window.currentUserType=null;
+}
+
+// ===== MOBILE NAV =====
+function toggleMobileNav(role){
+  const drawer = document.getElementById(role+'MobileDrawer');
+  const btn = document.getElementById(role+'Hamburger');
+  if(!drawer)return;
+  drawer.classList.toggle('open');
+  btn.classList.toggle('open');
+  document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : '';
+}
+function closeMobileDrawer(role){
+  const drawer = document.getElementById(role+'MobileDrawer');
+  const btn = document.getElementById(role+'Hamburger');
+  if(drawer) drawer.classList.remove('open');
+  if(btn) btn.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ===== SIDEBAR TOGGLE =====
+function toggleSidebar(role){
+  const sidebar = document.getElementById(role+'Sidebar');
+  const overlay = document.getElementById(role+'SidebarOverlay');
+  if(!sidebar)return;
+  sidebar.classList.toggle('mobile-open');
+  if(overlay) overlay.classList.toggle('active');
+}
+function closeSidebar(role){
+  const sidebar = document.getElementById(role+'Sidebar');
+  const overlay = document.getElementById(role+'SidebarOverlay');
+  if(sidebar) sidebar.classList.remove('mobile-open');
+  if(overlay) overlay.classList.remove('active');
+}
+
+// ===== SHA256 =====
+async function sha256(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+// ===== ADMIN AUTH =====
+const ADMIN_CREDS_KEY = 'adminCredentials_v2';
+async function initAdminCreds(){
+  if(!localStorage.getItem(ADMIN_CREDS_KEY)){
+    const uh = await sha256('UaeAdmin#1');
+    const ph = await sha256('Adm!n@Secure99');
+    localStorage.setItem(ADMIN_CREDS_KEY, JSON.stringify({usernameHash:uh,passwordHash:ph}));
+  }
+  // Check existing session
+  const saved = sessionStorage.getItem('currentUser_admin');
+  if(saved){try{currentUser=JSON.parse(saved);showAdminDashboard();}catch(e){}}
+}
+async function handleAdminLogin(){
+  const u = document.getElementById('adminUsername').value.trim();
+  const p = document.getElementById('adminPassword').value.trim();
+  if(!u||!p){alert('Please enter username and password.');return;}
+  const creds = JSON.parse(localStorage.getItem(ADMIN_CREDS_KEY)||'null');
+  if(!creds){alert('Credentials not initialized.');return;}
+  const uh = await sha256(u), ph = await sha256(p);
+  if(uh===creds.usernameHash && ph===creds.passwordHash){
+    currentUser={username:'admin',type:'admin'};
+    sessionStorage.setItem('currentUser_admin',JSON.stringify(currentUser));
+    showAdminDashboard();
+  } else { alert('Invalid admin credentials.'); }
+}
+function showAdminDashboard(){
+  window.currentUserType='admin';
+  document.getElementById('adminLoginPage').style.display='none';
+  document.getElementById('adminDashboard').classList.add('active');
+  document.getElementById('adminDisplayName').textContent='Admin';
+  populateFilters(); initNavbarSearch(); applyFilters();
+  setTimeout(checkAvailabilityNotifications,2000);
+  showToast('Welcome, Admin!');
+}
+function adminLogout(){
+  currentUser=null; window.currentUserType=null;
+  sessionStorage.removeItem('currentUser_admin');
+  document.getElementById('adminLoginPage').style.display='flex';
+  document.getElementById('adminDashboard').classList.remove('active');
+}
+function openChangeCredentials(){const m=document.getElementById('changeCredsModal');if(m)m.classList.add('active');}
+function closeChangeCredentials(){
+  const m=document.getElementById('changeCredsModal');if(m)m.classList.remove('active');
+  ['newUsername','newPassword','confirmPassword'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+async function saveNewCredentials(){
+  const nu=document.getElementById('newUsername').value.trim();
+  const np=document.getElementById('newPassword').value;
+  const cp=document.getElementById('confirmPassword').value;
+  if(!nu||!np){alert('Required.');return;}
+  if(np!==cp){alert('Passwords do not match.');return;}
+  if(np.length<8){alert('Min 8 characters.');return;}
+  const uh=await sha256(nu),ph=await sha256(np);
+  localStorage.setItem(ADMIN_CREDS_KEY,JSON.stringify({usernameHash:uh,passwordHash:ph}));
+  closeChangeCredentials(); showToast('Admin credentials updated!');
+}
+
+// ===== USER AUTH =====
+const USER_CREDS_KEY = 'userCredentials_v1';
+function initUserCreds(){
+  if(!localStorage.getItem(USER_CREDS_KEY)){
+    localStorage.setItem(USER_CREDS_KEY,JSON.stringify([{username:'user1',password:'user1234'}]));
+  }
+  const saved=sessionStorage.getItem('currentUser_user');
+  if(saved){try{currentUser=JSON.parse(saved);showUserDashboard();}catch(e){}}
+}
+function handleUserLogin(){
+  const u=document.getElementById('userUsername').value.trim();
+  const p=document.getElementById('userPassword').value.trim();
+  if(!u||!p){alert('Enter username and password.');return;}
+  const users=JSON.parse(localStorage.getItem(USER_CREDS_KEY)||'[]');
+  const found=users.find(x=>x.username===u&&x.password===p);
+  if(found){
+    currentUser={username:u,type:'user'};
+    sessionStorage.setItem('currentUser_user',JSON.stringify(currentUser));
+    showUserDashboard();
+  } else { alert('Invalid credentials.'); }
+}
+function showUserDashboard(){
+  window.currentUserType='user';
+  document.getElementById('userLoginPage').style.display='none';
+  document.getElementById('userDashboard').classList.add('active');
+  document.getElementById('userDisplayName').textContent=currentUser.username;
+  document.getElementById('userDrawerName').textContent=currentUser.username;
+  populateTypeFiltersUser(); applyFiltersUser();
+  showToast('Welcome, '+currentUser.username+'!');
+}
+function userLogout(){
+  currentUser=null; window.currentUserType=null;
+  sessionStorage.removeItem('currentUser_user');
+  document.getElementById('userLoginPage').style.display='flex';
+  document.getElementById('userDashboard').classList.remove('active');
+}
+function showUserSection(sec,el){
+  document.querySelectorAll('#userDashboard .nav-link').forEach(l=>l.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.getElementById('userPropertiesSection').style.display=sec==='properties'?'block':'none';
+  document.getElementById('userUploadSection').style.display=sec==='upload'?'block':'none';
+}
+function populateTypeFiltersUser(){
+  document.getElementById('propertyTypeFiltersUser').innerHTML=propertyTypes.map(t=>`<label class="filter-checkbox"><input type="checkbox" value="${t}"> ${t}</label>`).join('');
+}
+function loadAreasUser(){
+  const city=document.getElementById('filterCityUser').value;
+  const sel=document.getElementById('filterAreaUser');
+  sel.innerHTML='<option value="">All Areas</option>';
+  if(!city)return;
+  (customAreas[city]||[]).forEach(a=>{sel.innerHTML+=`<option value="${a}">${a}</option>`});
+}
+function loadSubAreasUser(){
+  const area=document.getElementById('filterAreaUser').value;
+  const sel=document.getElementById('filterSubAreaUser');
+  sel.innerHTML='<option value="">All Sub Areas</option>';
+  if(!area)return;
+  (customSubAreas[area]||[]).forEach(s=>{sel.innerHTML+=`<option value="${s}">${s}</option>`});
+}
+function applyFiltersUser(){
+  let filtered=properties.filter(p=>p.status==='approved');
+  const city=document.getElementById('filterCityUser')?.value||'';
+  const area=document.getElementById('filterAreaUser')?.value||'';
+  const sub=document.getElementById('filterSubAreaUser')?.value||'';
+  const minP=parseFloat(document.getElementById('minPriceUser')?.value||0);
+  const maxP=parseFloat(document.getElementById('maxPriceUser')?.value||0);
+  const pStatus=document.querySelector('input[name="propertyStatusUser"]:checked')?.value||'';
+  if(city)filtered=filtered.filter(p=>p.city===city);
+  if(area)filtered=filtered.filter(p=>p.area===area);
+  if(sub)filtered=filtered.filter(p=>p.subArea===sub);
+  if(minP)filtered=filtered.filter(p=>p.price>=minP);
+  if(maxP)filtered=filtered.filter(p=>p.price<=maxP);
+  if(pStatus)filtered=filtered.filter(p=>p.propertyStatus===pStatus);
+  renderToGrid(filtered,'propertiesGridUser');
+}
+function clearAllFiltersUser(){
+  document.getElementById('filterCityUser').value='';
+  document.getElementById('filterAreaUser').innerHTML='<option value="">All Areas</option>';
+  document.getElementById('filterSubAreaUser').innerHTML='<option value="">All Sub Areas</option>';
+  document.getElementById('minPriceUser').value='';
+  document.getElementById('maxPriceUser').value='';
+  const ps=document.querySelector('input[name="propertyStatusUser"][value=""]');if(ps)ps.checked=true;
+  applyFiltersUser();
+}
+function clearSearchUser(){document.getElementById('navSearchInputUser').value='';applyFiltersUser();}
+function markAllReadUser(){}
+function renderToGrid(list,gridId){
+  const grid=document.getElementById(gridId);if(!grid)return;
+  if(!list.length){grid.innerHTML=`<div class="no-results"><i class="fas fa-search"></i><h3>No properties found</h3><p>Try adjusting filters</p></div>`;return;}
+  grid.innerHTML=list.map(p=>buildPropertyCardHTML(p)).join('');
+}
+
+// ===== MARKETING AUTH =====
+const MKT_CREDS_KEY = 'mktCredentials_v1';
+async function initMktCreds(){
+  if(!localStorage.getItem(MKT_CREDS_KEY)){
+    const uh=await sha256('MktUae#1'); const ph=await sha256('Mkt@Secure99');
+    localStorage.setItem(MKT_CREDS_KEY,JSON.stringify({usernameHash:uh,passwordHash:ph}));
+  }
+  const saved=sessionStorage.getItem('currentUser_mkt');
+  if(saved){try{currentUser=JSON.parse(saved);showMktDashboard();}catch(e){}}
+}
+async function handleMktLogin(){
+  const u=document.getElementById('mktUsername').value.trim();
+  const p=document.getElementById('mktPassword').value.trim();
+  if(!u||!p){alert('Enter username and password.');return;}
+  const creds=JSON.parse(localStorage.getItem(MKT_CREDS_KEY)||'null');
+  if(!creds){alert('Not initialized.');return;}
+  const uh=await sha256(u),ph=await sha256(p);
+  if(uh===creds.usernameHash&&ph===creds.passwordHash){
+    currentUser={username:'marketing',type:'marketing'};
+    sessionStorage.setItem('currentUser_mkt',JSON.stringify(currentUser));
+    showMktDashboard();
+  } else { alert('Invalid marketing credentials.'); }
+}
+function showMktDashboard(){
+  window.currentUserType='marketing';
+  document.getElementById('marketingLoginPage').style.display='none';
+  document.getElementById('marketingDashboard').classList.add('active');
+  populateTypeFiltersMkt(); applyFiltersMkt();
+  showToast('Welcome, Marketing Team!');
+}
+function mktLogout(){
+  currentUser=null; window.currentUserType=null;
+  sessionStorage.removeItem('currentUser_mkt');
+  document.getElementById('marketingLoginPage').style.display='flex';
+  document.getElementById('marketingDashboard').classList.remove('active');
+}
+function openMktChangeCredentials(){const m=document.getElementById('mktChangeCredsModal');if(m)m.classList.add('active');}
+function closeMktChangeCredentials(){const m=document.getElementById('mktChangeCredsModal');if(m)m.classList.remove('active');}
+async function saveMktCredentials(){
+  const nu=document.getElementById('mktNewUsername').value.trim();
+  const np=document.getElementById('mktNewPassword').value;
+  const cp=document.getElementById('mktConfirmPassword').value;
+  if(!nu||!np){alert('Required.');return;}
+  if(np!==cp){alert('Passwords do not match.');return;}
+  const uh=await sha256(nu),ph=await sha256(np);
+  localStorage.setItem(MKT_CREDS_KEY,JSON.stringify({usernameHash:uh,passwordHash:ph}));
+  closeMktChangeCredentials(); showToast('Marketing credentials updated!');
+}
+function populateTypeFiltersMkt(){
+  document.getElementById('propertyTypeFiltersMkt').innerHTML=propertyTypes.map(t=>`<label class="filter-checkbox"><input type="checkbox" value="${t}"> ${t}</label>`).join('');
+}
+function loadAreasMkt(){
+  const city=document.getElementById('filterCityMkt').value;
+  const sel=document.getElementById('filterAreaMkt');
+  sel.innerHTML='<option value="">All Areas</option>';
+  if(!city)return;
+  (customAreas[city]||[]).forEach(a=>{sel.innerHTML+=`<option value="${a}">${a}</option>`});
+}
+function loadSubAreasMkt(){
+  const area=document.getElementById('filterAreaMkt').value;
+  const sel=document.getElementById('filterSubAreaMkt');
+  sel.innerHTML='<option value="">All Sub Areas</option>';
+  if(!area)return;
+  (customSubAreas[area]||[]).forEach(s=>{sel.innerHTML+=`<option value="${s}">${s}</option>`});
+}
+function applyFiltersMkt(){
+  let filtered=properties.filter(p=>p.status==='approved');
+  const city=document.getElementById('filterCityMkt')?.value||'';
+  const area=document.getElementById('filterAreaMkt')?.value||'';
+  const sub=document.getElementById('filterSubAreaMkt')?.value||'';
+  const minP=parseFloat(document.getElementById('minPriceMkt')?.value||0);
+  const maxP=parseFloat(document.getElementById('maxPriceMkt')?.value||0);
+  const pStatus=document.querySelector('input[name="propertyStatusMkt"]:checked')?.value||'';
+  if(city)filtered=filtered.filter(p=>p.city===city);
+  if(area)filtered=filtered.filter(p=>p.area===area);
+  if(sub)filtered=filtered.filter(p=>p.subArea===sub);
+  if(minP)filtered=filtered.filter(p=>p.price>=minP);
+  if(maxP)filtered=filtered.filter(p=>p.price<=maxP);
+  if(pStatus)filtered=filtered.filter(p=>p.propertyStatus===pStatus);
+  renderToGrid(filtered,'propertiesGridMkt');
+}
+function clearAllFiltersMkt(){
+  document.getElementById('filterCityMkt').value='';
+  document.getElementById('filterAreaMkt').innerHTML='<option value="">All Areas</option>';
+  document.getElementById('filterSubAreaMkt').innerHTML='<option value="">All Sub Areas</option>';
+  document.getElementById('minPriceMkt').value='';
+  document.getElementById('maxPriceMkt').value='';
+  const ps=document.querySelector('input[name="propertyStatusMkt"][value=""]');if(ps)ps.checked=true;
+  applyFiltersMkt();
+}
+function clearSearchMkt(){document.getElementById('navSearchInputMkt').value='';applyFiltersMkt();}
+function markAllReadMkt(){}
+
+// ===== ADMIN FILTERS (wiring to existing shared.js functions) =====
+function populateFilters(){
+  document.getElementById('propertyTypeFilters').innerHTML=propertyTypes.map(t=>`<label class="filter-checkbox"><input type="checkbox" value="${t}"> ${t}</label>`).join('');
+}
+function loadAreas(){
+  const city=document.getElementById('filterCity').value;
+  const sel=document.getElementById('filterArea');const list=document.getElementById('areaList');
+  sel.innerHTML='<option value="">All Areas</option>';
+  if(!city){if(list)list.innerHTML='<p style="color:var(--text-muted);padding:8px">Select a city first</p>';return;}
+  const areas=customAreas[city]||[];
+  areas.forEach(a=>{sel.innerHTML+=`<option value="${a}">${a}</option>`});
+  if(list)list.innerHTML=areas.map(a=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:.35rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-size:11px"><span>${a}</span><button onclick="removeArea('${a}')" style="background:var(--danger);color:#fff;border:none;border-radius:4px;width:20px;height:20px;cursor:pointer"><i class="fas fa-times"></i></button></div>`).join('');
+  loadSubAreas();
+}
+function loadSubAreas(){
+  const area=document.getElementById('filterArea').value;
+  const sel=document.getElementById('filterSubArea');const list=document.getElementById('subAreaList');
+  sel.innerHTML='<option value="">All Sub Areas</option>';
+  if(!area){if(list)list.innerHTML='';return;}
+  (customSubAreas[area]||[]).forEach(s=>{sel.innerHTML+=`<option value="${s}">${s}</option>`});
+  if(list)list.innerHTML=(customSubAreas[area]||[]).map(s=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:.35rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-size:11px"><span>${s}</span><button onclick="removeSubArea('${s}')" style="background:var(--danger);color:#fff;border:none;border-radius:4px;width:20px;height:20px;cursor:pointer"><i class="fas fa-times"></i></button></div>`).join('');
+}
+function addNewArea(){
+  const city=document.getElementById('filterCity').value;const na=document.getElementById('newAreaInput').value.trim();
+  if(!city||!na)return alert('Select city and enter area');
+  if(!customAreas[city])customAreas[city]=[];
+  if(customAreas[city].includes(na))return alert('Area exists');
+  customAreas[city].push(na);localStorage.setItem('customAreas',JSON.stringify(customAreas));
+  document.getElementById('newAreaInput').value='';loadAreas();showToast('Area added: '+na);
+}
+function removeArea(area){
+  const city=document.getElementById('filterCity').value;
+  if(confirm(`Remove "${area}"?`)){customAreas[city]=customAreas[city].filter(a=>a!==area);localStorage.setItem('customAreas',JSON.stringify(customAreas));loadAreas();showToast('Area removed');}
+}
+function addNewSubArea(){
+  const area=document.getElementById('filterArea').value;const ns=document.getElementById('newSubAreaInput').value.trim();
+  if(!area||!ns)return alert('Select area and enter sub area');
+  if(!customSubAreas[area])customSubAreas[area]=[];
+  if(customSubAreas[area].includes(ns))return alert('Sub area exists');
+  customSubAreas[area].push(ns);localStorage.setItem('customSubAreas',JSON.stringify(customSubAreas));
+  document.getElementById('newSubAreaInput').value='';loadSubAreas();showToast('Sub Area added: '+ns);
+}
+function removeSubArea(sub){
+  const area=document.getElementById('filterArea').value;
+  if(confirm(`Remove "${sub}"?`)){customSubAreas[area]=customSubAreas[area].filter(s=>s!==sub);localStorage.setItem('customSubAreas',JSON.stringify(customSubAreas));loadSubAreas();showToast('Sub Area removed');}
+}
+function applyFilters(searchOverride){
+  let filtered=[...properties];
+  const city=document.getElementById('filterCity')?.value||'';
+  const area=document.getElementById('filterArea')?.value||'';
+  const sub=document.getElementById('filterSubArea')?.value||'';
+  const minP=parseFloat(document.getElementById('minPrice')?.value||0);
+  const maxP=parseFloat(document.getElementById('maxPrice')?.value||0);
+  const pStatus=document.querySelector('input[name="propertyStatus"]:checked')?.value||'';
+  const rDur=document.querySelector('input[name="rentalDuration"]:checked')?.value||'';
+  const st=searchOverride||document.getElementById('navSearchInput')?.value.toLowerCase()||'';
+  if(city)filtered=filtered.filter(p=>p.city===city);
+  if(area)filtered=filtered.filter(p=>p.area===area);
+  if(sub)filtered=filtered.filter(p=>p.subArea===sub);
+  if(minP)filtered=filtered.filter(p=>p.price>=minP);
+  if(maxP)filtered=filtered.filter(p=>p.price<=maxP);
+  if(pStatus)filtered=filtered.filter(p=>p.propertyStatus===pStatus);
+  if(rDur)filtered=filtered.filter(p=>p.rentalType===rDur);
+  const typeChecks=document.querySelectorAll('#propertyTypeFilters input:checked');
+  if(typeChecks.length>0){const sel=Array.from(typeChecks).map(c=>c.value);filtered=filtered.filter(p=>sel.includes(p.type));}
+  ['balcony','attachedWashroom','window','commonWashroom','fullClosed'].forEach(a=>{
+    const cb=document.querySelector(`.filter-options input[value="${a}"]`);
+    if(cb?.checked)filtered=filtered.filter(p=>p.amenities?.[a]==='yes');
+  });
+  if(st)filtered=filtered.filter(p=>(p.title||'').toLowerCase().includes(st)||(p.area||'').toLowerCase().includes(st)||(p.city||'').toLowerCase().includes(st)||(p.type||'').toLowerCase().includes(st)||(p.profileCode||'').toLowerCase().includes(st));
+  const ce=document.getElementById('propCount');if(ce)ce.textContent=`(${filtered.length})`;
+  displayProperties(filtered);
+}
+function clearAllFilters(){
+  document.getElementById('filterCity').value='';
+  document.getElementById('filterArea').innerHTML='<option value="">All Areas</option>';
+  document.getElementById('filterSubArea').innerHTML='<option value="">All Sub Areas</option>';
+  document.getElementById('areaList').innerHTML='';document.getElementById('subAreaList').innerHTML='';
+  document.querySelectorAll('#propertyTypeFilters input').forEach(c=>c.checked=false);
+  document.getElementById('minPrice').value='';document.getElementById('maxPrice').value='';
+  const ps=document.querySelector('input[name="propertyStatus"][value=""]');if(ps)ps.checked=true;
+  const rd=document.querySelector('input[name="rentalDuration"][value=""]');if(rd)rd.checked=true;
+  document.querySelectorAll('.filter-options input[type="checkbox"]').forEach(c=>c.checked=false);
+  const si=document.getElementById('navSearchInput');if(si)si.value='';
+  applyFilters();showToast('Filters cleared');
+}
+function showSection(sec,el){
+  document.querySelectorAll('#adminDashboard .nav-link').forEach(l=>l.classList.remove('active'));
+  if(el)el.classList.add('active');
+  applyFilters();
+}
+
+// ===== ADMIN PROPERTY ACTIONS =====
+function approveProperty(id){
+  properties=properties.map(p=>p.id===id?{...p,status:'approved'}:p);
+  localStorage.setItem('properties',JSON.stringify(properties));applyFilters();showToast('Property approved!');
+}
+function deleteProperty(id){
+  if(!confirm('Delete this property?'))return;
+  properties=properties.filter(p=>p.id!==id);localStorage.setItem('properties',JSON.stringify(properties));applyFilters();showToast('Deleted');
+}
+function openEditModal(id){
+  const p=properties.find(p=>p.id===id);if(!p)return;
+  document.getElementById('editFormContent').innerHTML=`
+    <form onsubmit="savePropertyEdit(${id});return false;">
+      <div class="edit-form-group"><label>Title</label><input type="text" id="editTitle" value="${(p.title||'').replace(/"/g,'&quot;')}" required></div>
+      <div class="edit-form-group"><label>Area</label><input type="text" id="editArea" value="${p.area||''}"></div>
+      <div class="edit-form-group"><label>Sub Area</label><input type="text" id="editSubArea" value="${p.subArea||''}"></div>
+      <div class="edit-form-group"><label>Price (AED)</label><input type="number" id="editPrice" value="${p.price}" required></div>
+      <div class="edit-form-group"><label>Size (Sq Ft)</label><input type="number" id="editSize" value="${p.areaSize}"></div>
+      <div class="edit-form-group"><label>Bedrooms</label><input type="number" id="editBedrooms" value="${p.bedrooms}"></div>
+      <div class="edit-form-group"><label>Bathrooms</label><input type="number" id="editBathrooms" value="${p.bathrooms}"></div>
+      <div class="edit-form-group"><label>Status</label><select id="editStatus"><option value="rent" ${p.propertyStatus==='rent'?'selected':''}>For Rent</option><option value="sale" ${p.propertyStatus==='sale'?'selected':''}>For Sale</option><option value="under-construction" ${p.propertyStatus==='under-construction'?'selected':''}>Under Construction</option><option value="sold-out" ${p.propertyStatus==='sold-out'?'selected':''}>Sold Out</option></select></div>
+      <div class="edit-form-group"><label>Video URL</label><input type="url" id="editVideoUrl" value="${p.videoUrl||''}"></div>
+      <div class="edit-form-group"><label>Description</label><textarea id="editDescription" rows="3">${p.description||''}</textarea></div>
+      <div class="edit-form-group"><label>WhatsApp</label><input type="text" id="editWhatsapp" value="${p.contact?.whatsapp||''}"></div>
+      <div class="edit-form-group"><label>Phone</label><input type="text" id="editPhone" value="${p.contact?.phone||''}"></div>
+      <button type="submit" class="save-edit-btn">Save Changes</button>
+    </form>`;
+  document.getElementById('editModal').classList.add('active');
+}
+function savePropertyEdit(id){
+  const p=properties.find(p=>p.id===id);if(!p)return;
+  p.title=document.getElementById('editTitle').value;p.area=document.getElementById('editArea').value;
+  p.subArea=document.getElementById('editSubArea').value;p.price=parseFloat(document.getElementById('editPrice').value);
+  p.areaSize=parseFloat(document.getElementById('editSize').value);p.bedrooms=parseInt(document.getElementById('editBedrooms').value)||0;
+  p.bathrooms=parseInt(document.getElementById('editBathrooms').value)||1;p.propertyStatus=document.getElementById('editStatus').value;
+  p.videoUrl=document.getElementById('editVideoUrl').value;p.description=document.getElementById('editDescription').value;
+  p.contact={whatsapp:document.getElementById('editWhatsapp').value,phone:document.getElementById('editPhone').value};
+  p.timerUpdatedAt=new Date().toISOString();
+  localStorage.setItem('properties',JSON.stringify(properties));closeEditModal();applyFilters();showToast('Property updated!');
+}
+function closeEditModal(){document.getElementById('editModal').classList.remove('active');}
+function openTimerModal(id,e){
+  if(e)e.stopPropagation();const p=properties.find(p=>p.id===id);if(!p)return;
+  document.getElementById('timerPropertyId').value=id;
+  if(p.availableFrom){const d=new Date(p.availableFrom);document.getElementById('timerAvailableDate').value=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16);}
+  else document.getElementById('timerAvailableDate').value='';
+  document.getElementById('timerEditModal').classList.add('active');
+}
+function closeTimerModal(){document.getElementById('timerEditModal').classList.remove('active');}
+function saveTimerUpdate(){
+  const id=parseInt(document.getElementById('timerPropertyId').value);const now=new Date().toISOString();
+  const dv=document.getElementById('timerAvailableDate').value;
+  properties=properties.map(p=>{
+    if(p.id===id)return{...p,availableFrom:dv?new Date(dv).toISOString():'',timerUpdatedAt:now,createdAt:now};
+    return p;
+  });
+  localStorage.setItem('properties',JSON.stringify(properties));closeTimerModal();applyFilters();showToast('Date updated!');
+}
+
+// ===== TAWK.TO =====
+var Tawk_API=Tawk_API||{},Tawk_LoadStart=new Date();
+(function(){var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];s1.async=true;s1.src='https://embed.tawk.to/69eb77617bef1a1c30ae69b1/1jmvsklu9';s1.charset='UTF-8';s1.setAttribute('crossorigin','*');s0.parentNode.insertBefore(s1,s0);})();
+</script>
+</body>
+</html>
